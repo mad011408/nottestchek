@@ -205,8 +205,8 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     },
     [],
   );
-  const [chats, setChats] = useState<Doc<"chats">[]>([]);
-  const [subscription, setSubscription] = useState<SubscriptionTier>("free");
+  const [chats, setChats] = useState<any[]>([]);
+  const [subscription, setSubscription] = useState<SubscriptionTier>("ultra");
   const [isCheckingProPlan, setIsCheckingProPlan] = useState(false);
   const chatResetRef = useRef<(() => void) | null>(null);
 
@@ -300,10 +300,10 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     setSubscription("ultra");
   }, [user, entitlements]);
 
-  // Trigger aggregate migration for authenticated users (on-demand backfill)
-  const ensureAggregatesMigrated = useMutation(
-    api.aggregateMigrations.ensureUserAggregatesMigrated,
-  );
+  // const ensureAggregatesMigrated = useMutation(
+  //   api.aggregateMigrations.ensureUserAggregatesMigrated,
+  // );
+  const ensureAggregatesMigrated = async () => {};
   const hasMigrationRun = useRef(false);
   const previousUserIdRef = useRef<string | null>(null);
 

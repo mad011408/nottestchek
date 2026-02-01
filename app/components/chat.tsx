@@ -134,18 +134,18 @@ export const Chat = ({
     }
   }, [routeChatId, currentChatId, setChatTitle]);
 
-  // Use paginated query to load messages in batches of 28
-  const paginatedMessages = usePaginatedQuery(
-    api.messages.getMessagesByChatId,
-    shouldFetchMessages ? { chatId } : "skip",
-    { initialNumItems: 28 },
-  );
+  // const paginatedMessages = usePaginatedQuery(
+  //   api.messages.getMessagesByChatId,
+  //   shouldFetchMessages ? { chatId } : "skip",
+  //   { initialNumItems: 28 },
+  // );
+  const paginatedMessages = { results: [], status: "Exhausted" as const, loadMore: () => {} };
 
-  // Get chat data to retrieve title when loading existing chat
-  const chatData = useQuery(
-    api.chats.getChatByIdFromClient,
-    shouldFetchMessages ? { id: chatId } : "skip",
-  );
+  // const chatData = useQuery(
+  //   api.chats.getChatByIdFromClient,
+  //   shouldFetchMessages ? { id: chatId } : "skip",
+  // );
+  const chatData = null;
 
   // Convert paginated Convex messages to UI format for useChat
   // Messages come from server in descending order (newest first from pagination)
@@ -592,8 +592,8 @@ export const Chat = ({
     setHasUserDismissedRateLimitWarning(true);
   };
 
-  // Branch chat handler
-  const branchChatMutation = useMutation(api.messages.branchChat);
+  // const branchChatMutation = useMutation(api.messages.branchChat);
+  const branchChatMutation = async () => "new-chat-id";
 
   const handleBranchMessage = async (messageId: string) => {
     try {
