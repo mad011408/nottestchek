@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"next dev --turbopack\" \"npx convex dev\"",
+    "dev": "next dev --turbopack",
     "dev:next": "next dev --turbopack",
     "dev:convex": "npx convex dev",
     "build": "next build",
