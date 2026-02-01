@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/node_modules/.pnpm/streamdown%401.6.10_%40types%2Bmdast%404.0.4_micromark-util-types%402.0.2_micromark%404.0.2_react%4019.2.1/node_modules/streamdown/dist/mermaid-NA5CF7SZ.js"],"sourcesContent":["\"use client\";\nexport{c as Mermaid}from'./chunk-OGVTOU66.js';"],"names":[],"mappings":";AACA;AADA","ignoreList":[0]}}]
+}
