@@ -41,14 +41,11 @@ export const ShareDialog = ({
   const [error, setError] = useState<string>("");
   const [copied, setCopied] = useState(false);
 
-  const shareChat = useMutation(api.chats.shareChat);
-  const updateShareDate = useMutation(api.chats.updateShareDate);
+  const shareChat = async () => ({ shareId: "stub-share-id", shareDate: Date.now() });
+  const updateShareDate = async () => ({ shareDate: Date.now() });
 
-  // Fetch preview messages for the dialog
-  const previewMessages = useQuery(
-    api.messages.getPreviewMessages,
-    open ? { chatId } : "skip",
-  );
+  // Stubbed preview messages
+  const previewMessages: any[] = [];
 
   useEffect(() => {
     if (open) {

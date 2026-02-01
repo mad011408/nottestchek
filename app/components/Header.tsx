@@ -10,7 +10,8 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ chatTitle }) => {
-  const { user, loading } = useAuth();
+  const user = { id: "default-user" };
+  const loading = false;
 
   const handleSignIn = () => {
     window.location.href = "/login";

@@ -28,7 +28,10 @@ export const DeleteAccountDialog = ({
   onOpenChange,
 }: DeleteAccountDialogProps) => {
   const { user } = useAuth();
-  const deleteAllUserData = useMutation(api.userDeletion.deleteAllUserData);
+  const deleteAllUserData = async () => {
+    console.log("Mock delete all user data");
+    return { success: true };
+  };
   const [isDeleting, setIsDeleting] = useState(false);
   const [emailInput, setEmailInput] = useState("");
   const [confirmInput, setConfirmInput] = useState("");

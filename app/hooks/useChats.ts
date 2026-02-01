@@ -11,22 +11,15 @@ import { useGlobalState } from "../contexts/GlobalState";
  * Can be used by multiple components to ensure chats are loaded when needed
  */
 export const useChats = (shouldFetch: boolean = true) => {
-  const { user } = useAuth();
-  const { setChats } = useGlobalState();
+  const user = { id: "default-user" };
+  const setChats = (chats: any) => {};
 
-  // Get user's chats with pagination
-  const paginatedChats = usePaginatedQuery(
-    api.chats.getUserChats,
-    user && shouldFetch ? {} : "skip",
-    { initialNumItems: 28 },
-  );
-
-  // Update global chats state when chats change
-  useEffect(() => {
-    if (paginatedChats.results) {
-      setChats(paginatedChats.results);
-    }
-  }, [paginatedChats.results, setChats]);
+  // Stubbed paginated chats
+  const paginatedChats = {
+    results: [],
+    status: "Exhausted" as const,
+    loadMore: () => {},
+  };
 
   return paginatedChats;
 };

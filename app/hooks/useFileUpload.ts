@@ -32,12 +32,11 @@ export const useFileUpload = (mode: "ask" | "agent" = "ask") => {
   const [showDragOverlay, setShowDragOverlay] = useState(false);
   const dragCounterRef = useRef(0);
 
-  const generateUploadUrl = useMutation(api.fileStorage.generateUploadUrl);
-  const deleteFile = useMutation(api.fileStorage.deleteFile);
-  const saveFile = useAction(api.fileActions.saveFile);
-  const generateS3UploadUrlAction = useAction(
-    api.s3Actions.generateS3UploadUrlAction,
-  );
+  // Stubbed Convex hooks
+  const generateUploadUrl = async () => "stub-url";
+  const deleteFile = async () => {};
+  const saveFile = async () => ({ url: "stub-url", fileId: "stub-id", tokens: 0 });
+  const generateS3UploadUrlAction = async () => ({ uploadUrl: "stub-url", s3Key: "stub-key" });
 
   // Wrap Convex mutation to match `() => Promise<string>` signature expected by the util
   const generateUploadUrlFn = useCallback(

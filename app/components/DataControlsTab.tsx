@@ -27,7 +27,10 @@ const DataControlsTab = () => {
   const [isDeletingSandboxes, setIsDeletingSandboxes] = useState(false);
   const [showManageSharedChats, setShowManageSharedChats] = useState(false);
 
-  const deleteAllChats = useMutation(api.chats.deleteAllChats);
+  const deleteAllChats = async () => {
+    console.log("Mock delete all chats");
+    return { success: true };
+  };
 
   const handleDeleteAllChats = async () => {
     if (isDeletingChats) return;

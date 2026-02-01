@@ -70,17 +70,11 @@ export const useChatHandlers = ({
     temporaryChatsEnabledRef.current = temporaryChatsEnabled;
   }, [temporaryChatsEnabled]);
 
-  const deleteLastAssistantMessage = useMutation(
-    api.messages.deleteLastAssistantMessage,
-  );
-  const saveAssistantMessage = useMutation(api.messages.saveAssistantMessage);
-  const regenerateWithNewContent = useMutation(
-    api.messages.regenerateWithNewContent,
-  );
-  const cancelStreamMutation = useMutation(api.chats.cancelStreamFromClient);
-  const cancelTempStreamMutation = useMutation(
-    api.tempStreams.cancelTempStreamFromClient,
-  );
+  const deleteLastAssistantMessage = async () => {};
+  const saveAssistantMessage = async () => {};
+  const regenerateWithNewContent = async () => {};
+  const cancelStreamMutation = async () => {};
+  const cancelTempStreamMutation = async () => {};
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

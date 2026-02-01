@@ -27,7 +27,7 @@ const TeamPricingDialog: React.FC<TeamPricingDialogProps> = ({
   initialSeats = 5,
   initialPlan = "monthly",
 }) => {
-  const { user } = useAuth();
+  const user = { id: "default-user" };
   const { subscription } = useGlobalState();
   const { upgradeLoading, upgradeError, handleUpgrade, setUpgradeError } =
     useUpgrade();

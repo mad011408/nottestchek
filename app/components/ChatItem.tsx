@@ -69,8 +69,8 @@ const ChatItem: React.FC<ChatItemProps> = ({
     currentChatId,
   } = useGlobalState();
   const isMobile = useIsMobile();
-  const deleteChat = useMutation(api.chats.deleteChat);
-  const renameChat = useMutation(api.chats.renameChat);
+  const deleteChat = async () => {};
+  const renameChat = async () => {};
 
   // Check if this chat is currently active based on URL
   const isCurrentlyActive = window.location.pathname === `/c/${id}`;

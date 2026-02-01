@@ -151,7 +151,7 @@ export const PRICING = {
 } as const;
 
 const PricingDialog: React.FC<PricingDialogProps> = ({ isOpen, onClose }) => {
-  const { user } = useAuth();
+  const user = { id: "default-user" };
   const { subscription, isCheckingProPlan, setTeamPricingDialogOpen } =
     useGlobalState();
   const { upgradeLoading, handleUpgrade } = useUpgrade();

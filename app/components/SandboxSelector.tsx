@@ -61,7 +61,7 @@ export function SandboxSelector({
 }: SandboxSelectorProps) {
   const [open, setOpen] = useState(false);
 
-  const connections = useQuery(api.localSandbox.listConnections);
+  const connections = [];
 
   const options: ConnectionOption[] = [
     {

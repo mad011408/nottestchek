@@ -89,7 +89,7 @@ const UpgradeBanner = ({ isCollapsed }: { isCollapsed: boolean }) => {
 };
 
 const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
-  const { user } = useAuth();
+  const user = { id: "default-user", email: "user@example.com", firstName: "Default", lastName: "User" };
   const { isCheckingProPlan, subscription } = useGlobalState();
   const [showCustomizeDialog, setShowCustomizeDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);

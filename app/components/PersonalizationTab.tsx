@@ -18,13 +18,13 @@ const PersonalizationTab = ({
   onCustomInstructions,
   onManageMemories,
 }: PersonalizationTabProps) => {
-  const userCustomization = useQuery(
-    api.userCustomization.getUserCustomization,
-    {},
-  );
-  const saveCustomization = useMutation(
-    api.userCustomization.saveUserCustomization,
-  );
+  const userCustomization = {
+    include_memory_entries: true
+  };
+  const saveCustomization = async (data: any) => {
+    console.log("Mock save customization:", data);
+    return { success: true };
+  };
 
   return (
     <div className="space-y-6">

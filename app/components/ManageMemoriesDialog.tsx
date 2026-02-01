@@ -22,9 +22,15 @@ const ManageMemoriesDialog = ({
   open,
   onOpenChange,
 }: ManageMemoriesDialogProps) => {
-  const memories = useQuery(api.memories.getUserMemories, open ? {} : "skip");
-  const deleteMemory = useMutation(api.memories.deleteUserMemory);
-  const deleteAllMemories = useMutation(api.memories.deleteAllUserMemories);
+  const memories = [];
+  const deleteMemory = async (data: any) => {
+    console.log("Mock delete memory:", data);
+    return { success: true };
+  };
+  const deleteAllMemories = async () => {
+    console.log("Mock delete all memories");
+    return { success: true };
+  };
 
   const handleDeleteMemory = async (memoryId: string) => {
     try {

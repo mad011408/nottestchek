@@ -16,8 +16,8 @@ export const useFeedback = ({ messages, setMessages }: UseFeedbackProps) => {
     string | null
   >(null);
 
-  // Convex mutation for feedback
-  const createFeedback = useMutation(api.feedback.createFeedback);
+  // Stubbed Convex mutation for feedback
+  const createFeedback = async () => {};
 
   // Handle feedback submission (positive/negative)
   const handleFeedback = useCallback(

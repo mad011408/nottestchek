@@ -4,7 +4,8 @@ import React from "react";
 import { useAuth } from "@workos-inc/authkit-nextjs/components";
 
 const Footer: React.FC = () => {
-  const { user, loading } = useAuth();
+  const user = { id: "default-user" };
+  const loading = false;
 
   if (loading || user) {
     return null;

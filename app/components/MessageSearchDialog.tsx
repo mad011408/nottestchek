@@ -63,13 +63,12 @@ export const MessageSearchDialog: React.FC<MessageSearchDialogProps> = ({
   const observerRef = useRef<IntersectionObserver | null>(null);
 
   // Use Convex usePaginatedQuery for search
-  const searchResults = usePaginatedQuery(
-    api.messages.searchMessages,
-    debouncedQuery.trim() && user
-      ? { searchQuery: debouncedQuery.trim() }
-      : "skip",
-    { initialNumItems: 20 },
-  );
+  const searchResults = {
+    status: "Exhausted",
+    results: [],
+    loadMore: () => {},
+    isLoading: false
+  } as any;
 
   // Date categorization functions
   const getChatDateCategory = (chat: Doc<"chats">): DateCategory => {

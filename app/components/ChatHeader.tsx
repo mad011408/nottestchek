@@ -54,7 +54,8 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({
   isChatNotFound = false,
   branchedFromChatTitle,
 }) => {
-  const { user, loading } = useAuth();
+  const user = { id: "default-user" };
+  const loading = false;
   const {
     toggleChatSidebar,
     subscription,

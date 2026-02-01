@@ -68,13 +68,17 @@ export const CustomizeHackerAIDialog = ({
   const isTraitsOverLimit = traitsText.length > MAX_CHAR_LIMIT;
   const isAdditionalInfoOverLimit = additionalInfo.length > MAX_CHAR_LIMIT;
 
-  const saveCustomization = useMutation(
-    api.userCustomization.saveUserCustomization,
-  );
-  const userCustomization = useQuery(
-    api.userCustomization.getUserCustomization,
-    open ? {} : "skip",
-  );
+  const saveCustomization = async (data: any) => {
+    console.log("Mock save customization:", data);
+    return { success: true };
+  };
+  const userCustomization = {
+    nickname: "",
+    occupation: "",
+    personality: "default",
+    traits: "",
+    additional_info: ""
+  };
 
   // Load existing customization data
   useEffect(() => {
