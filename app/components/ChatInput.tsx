@@ -101,7 +101,18 @@ export const ChatInput = ({
     setQueueBehavior,
     sandboxPreference,
     setSandboxPreference,
+    selectedModel,
+    setSelectedModel,
   } = useGlobalState();
+
+  const models = [
+    { value: "claude-opus-4-5-20251101", label: "Claude 4.5 Opus" },
+    { value: "gemini-3-pro-preview", label: "Gemini 3 Pro" },
+    { value: "gpt-5.2-pro-2025-12-11", label: "GPT-5.2 Pro" },
+    { value: "o3-pro-2025-06-10", label: "o3 Pro" },
+    { value: "minimax-m2.1", label: "Minimax m2.1" },
+    { value: "moonshotai/kimi-k2.5", label: "Kimi k2.5" },
+  ];
   const {
     fileInputRef,
     handleFileUploadEvent,
@@ -321,6 +332,30 @@ export const ChatInput = ({
 
             {/* Mode selector + Sandbox selector container */}
             <div className="flex items-center gap-1.5 min-w-0 overflow-hidden">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-7 px-2 text-xs font-medium rounded-md bg-muted hover:bg-muted/50 focus-visible:ring-1 shrink-0"
+                  >
+                    {models.find(m => m.value === selectedModel)?.label || "Model"}
+                    <ChevronDown className="w-3 h-3 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-48">
+                  {models.map((model) => (
+                    <DropdownMenuItem
+                      key={model.value}
+                      onClick={() => setSelectedModel(model.value)}
+                      className="cursor-pointer"
+                    >
+                      {model.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

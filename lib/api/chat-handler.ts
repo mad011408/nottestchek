@@ -94,6 +94,8 @@ export const createChatHandler = () => {
         regenerate,
         temporary,
         sandboxPreference,
+        selectedModel: clientModel,
+        customSystemPrompt,
       }: {
         messages: UIMessage[];
         mode: ChatMode;
@@ -102,7 +104,11 @@ export const createChatHandler = () => {
         regenerate?: boolean;
         temporary?: boolean;
         sandboxPreference?: SandboxPreference;
+        selectedModel?: string;
+        customSystemPrompt?: string;
       } = await req.json();
+
+      const selectedModel = clientModel || "gpt-5.2-pro-2025-12-11";
 
       const { userId, subscription } = { userId: "default-user", subscription: "ultra" };
       const userLocation = geolocation(req);
@@ -263,11 +269,11 @@ export const createChatHandler = () => {
             posthog,
           );
 
-          let currentSystemPrompt = await systemPrompt(
+          let currentSystemPrompt = customSystemPrompt || await systemPrompt(
             userId,
             mode,
             subscription,
-            selectedModel,
+            selectedModel as any,
             userCustomization,
             temporary,
             chat?.finish_reason,

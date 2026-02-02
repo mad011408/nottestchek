@@ -153,6 +153,10 @@ interface GlobalStateType {
 
   // Register a chat reset function that will be invoked on initializeNewChat
   setChatReset: (fn: (() => void) | null) => void;
+  selectedModel: string;
+  setSelectedModel: (model: string) => void;
+  customSystemPrompt: string;
+  setCustomSystemPrompt: (prompt: string) => void;
 }
 
 const GlobalStateContext = createContext<GlobalStateType | undefined>(
@@ -647,6 +651,9 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     [],
   );
 
+  const [selectedModel, setSelectedModel] = useState("gpt-5.2-pro-2025-12-11");
+  const [customSystemPrompt, setCustomSystemPrompt] = useState("");
+
   const value: GlobalStateType = {
     input,
     setInput,
@@ -723,6 +730,11 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
 
     sandboxPreference,
     setSandboxPreference: setSandboxPreferenceState,
+
+    selectedModel,
+    setSelectedModel,
+    customSystemPrompt,
+    setCustomSystemPrompt,
   };
 
   return (

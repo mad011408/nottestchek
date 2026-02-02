@@ -62,6 +62,8 @@ export const useChatHandlers = ({
     removeQueuedMessage,
     queueBehavior,
     sandboxPreference,
+    selectedModel,
+    customSystemPrompt,
   } = useGlobalState();
 
   // Avoid stale closure on temporary flag
@@ -139,7 +141,7 @@ export const useChatHandlers = ({
       }
       // Check token limit before sending based on user plan
       const tokenCount = countInputTokens(input, uploadedFiles);
-      const maxTokens = getMaxTokensForSubscription(subscription);
+      const maxTokens = 120000;
 
       // Additional validation for Ask mode: ensure files don't exceed Ask mode token limits
       // This prevents uploading files in Agent mode then switching to Ask mode to send them
@@ -148,9 +150,9 @@ export const useChatHandlers = ({
           (total, file) => total + (file.tokens || 0),
           0,
         );
-        if (fileTokens > MAX_TOKENS_FILE) {
+        if (fileTokens > maxTokens) {
           toast.error("Cannot send files in Ask mode", {
-            description: `Files exceed Ask mode token limit (${fileTokens.toLocaleString()}/${MAX_TOKENS_FILE.toLocaleString()} tokens). Tip: Switch to Agent mode or remove large files.`,
+            description: `Files exceed token limit (${fileTokens.toLocaleString()}/${maxTokens.toLocaleString()} tokens).`,
           });
           return;
         }
@@ -158,9 +160,8 @@ export const useChatHandlers = ({
 
       if (tokenCount > maxTokens) {
         const hasFiles = uploadedFiles.length > 0;
-        const planText = subscription !== "free" ? "" : " (Free plan limit)";
         toast.error("Message is too long", {
-          description: `Your message is too large (${tokenCount.toLocaleString()} tokens). Please make it shorter${hasFiles ? " or remove some files" : ""}${planText}.`,
+          description: `Your message is too large (${tokenCount.toLocaleString()} tokens). Please make it shorter${hasFiles ? " or remove some files" : ""}.`,
         });
         return;
       }
@@ -197,6 +198,8 @@ export const useChatHandlers = ({
               todos,
               temporary: temporaryChatsEnabled,
               sandboxPreference,
+              selectedModel,
+              customSystemPrompt,
             },
           },
         );
@@ -211,6 +214,8 @@ export const useChatHandlers = ({
               todos,
               temporary: temporaryChatsEnabled,
               sandboxPreference,
+              selectedModel,
+              customSystemPrompt,
             },
           },
         );
@@ -550,6 +555,8 @@ export const useChatHandlers = ({
           todos,
           temporary: temporaryChatsEnabled,
           sandboxPreference,
+          selectedModel,
+          customSystemPrompt,
         },
       });
     } catch (error) {

@@ -26,8 +26,23 @@ const PersonalizationTab = ({
     return { success: true };
   };
 
+  const { customSystemPrompt, setCustomSystemPrompt } = useGlobalState();
+
   return (
     <div className="space-y-6">
+      {/* System Prompt Section */}
+      <div>
+        <h3 className="text-lg font-medium mb-4 pb-2 border-b">System Prompt</h3>
+        <div className="space-y-3">
+          <textarea
+            value={customSystemPrompt}
+            onChange={(e) => setCustomSystemPrompt(e.target.value)}
+            placeholder="Enter custom system instructions..."
+            className="w-full h-32 rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          />
+        </div>
+      </div>
+
       {/* Personalization Section */}
       <div>
         <div className="space-y-4">

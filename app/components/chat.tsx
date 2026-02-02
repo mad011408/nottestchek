@@ -76,6 +76,8 @@ export const Chat = ({
     todos,
     sandboxPreference,
     setSandboxPreference,
+    selectedModel,
+    customSystemPrompt,
   } = useGlobalState();
 
   // Simple logic: use route chatId if provided, otherwise generate new one
@@ -230,6 +232,8 @@ export const Chat = ({
           body: {
             chatId: id,
             messages: messagesWithoutUrls,
+            selectedModel,
+            customSystemPrompt,
             ...body,
           },
         };
@@ -527,6 +531,8 @@ export const Chat = ({
     sendMessage,
     temporaryChatsEnabledRef,
     queueBehavior,
+    selectedModel,
+    customSystemPrompt,
   ]);
 
   // Keep a ref to the latest messageQueue to avoid stale closures
