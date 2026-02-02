@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Authenticated, Unauthenticated } from "convex/react";
 import { ChatInput } from "./components/ChatInput";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -73,7 +72,7 @@ const AuthenticatedContent = () => {
   return <Chat autoResume={false} />;
 };
 
-// Main page component with Convex authentication
+// Main page component
 export default function Page() {
   const {
     subscription,
@@ -114,12 +113,7 @@ export default function Page() {
 
   return (
     <>
-      <Authenticated>
-        <AuthenticatedContent />
-      </Authenticated>
-      <Unauthenticated>
-        <UnauthenticatedContent />
-      </Unauthenticated>
+      <AuthenticatedContent />
       <PricingDialog isOpen={showPricing} onClose={handleClosePricing} />
       <TeamPricingDialog
         isOpen={teamPricingDialogOpen}

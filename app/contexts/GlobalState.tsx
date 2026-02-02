@@ -9,9 +9,6 @@ import React, {
   useRef,
   ReactNode,
 } from "react";
-import { useAuth } from "@workos-inc/authkit-nextjs/components";
-import { useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import type {
   ChatMode,
   SidebarContent,
@@ -27,7 +24,6 @@ import {
 import type { UploadedFileState } from "@/types/file";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { chatSidebarStorage } from "@/lib/utils/sidebar-storage";
-import type { Doc, Id } from "@/convex/_generated/dataModel";
 import type { SubscriptionTier } from "@/types";
 import { v4 as uuidv4 } from "uuid";
 import { toast } from "sonner";
@@ -36,6 +32,9 @@ import {
   writeChatMode,
   cleanupExpiredDrafts,
 } from "@/lib/utils/client-storage";
+
+type Id<T extends string> = string;
+type Doc<T extends string> = any;
 
 interface GlobalStateType {
   // Input state
@@ -170,7 +169,6 @@ interface GlobalStateProviderProps {
 export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }) => {
-  const user = { id: "default-user", email: "user@example.com" };
   const entitlements = ["ultra-plan"];
   const isMobile = useIsMobile();
   const prevIsMobile = useRef(isMobile);
@@ -213,6 +211,8 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   const [subscription, setSubscription] = useState<SubscriptionTier>("ultra");
   const [isCheckingProPlan, setIsCheckingProPlan] = useState(false);
   const chatResetRef = useRef<(() => void) | null>(null);
+
+  const user = { id: "default-user" };
 
   // Rate limit warning dismissal state (persists across chat switches)
   const [
@@ -302,7 +302,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   // Prefer normalized entitlements ("pro-plan", "ultra-plan"); fall back to monthly/yearly keys for backward compatibility
   useEffect(() => {
     setSubscription("ultra");
-  }, [user, entitlements]);
+  }, [entitlements]);
 
   // const ensureAggregatesMigrated = useMutation(
   //   api.aggregateMigrations.ensureUserAggregatesMigrated,
@@ -312,7 +312,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   const previousUserIdRef = useRef<string | null>(null);
 
   useEffect(() => {
-    const currentUserId = user?.id ?? null;
+    const currentUserId = user.id;
 
     // Reset migration flag if user changed (logout/login as different user)
     if (previousUserIdRef.current !== currentUserId) {
@@ -320,23 +320,17 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
       previousUserIdRef.current = currentUserId;
     }
 
-    if (!user || hasMigrationRun.current) return;
+    if (hasMigrationRun.current) return;
 
     hasMigrationRun.current = true;
     ensureAggregatesMigrated().catch((error) => {
       console.error("Failed to migrate user aggregates:", error);
     });
-  }, [user, ensureAggregatesMigrated]);
+  }, [ensureAggregatesMigrated]);
 
   // Refresh entitlements only when explicitly requested via URL param
   useEffect(() => {
     const refreshFromUrl = async () => {
-      if (!user) {
-        setSubscription("free");
-        setIsCheckingProPlan(false);
-        return;
-      }
-
       if (typeof window === "undefined") return;
 
       const url = new URL(window.location.href);
@@ -364,13 +358,6 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
               : "free",
           );
         } else {
-          if (response.status === 401) {
-            if (typeof window !== "undefined") {
-              const { clientLogout } = await import("@/lib/utils/logout");
-              clientLogout();
-              return;
-            }
-          }
           setSubscription("free");
         }
       } catch {

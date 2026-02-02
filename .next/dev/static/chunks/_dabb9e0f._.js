@@ -778,10 +778,6 @@ var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.sign
 const GlobalStateContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])(undefined);
 const GlobalStateProvider = ({ children })=>{
     _s();
-    const user = {
-        id: "default-user",
-        email: "user@example.com"
-    };
     const entitlements = [
         "ultra-plan"
     ];
@@ -832,6 +828,9 @@ const GlobalStateProvider = ({ children })=>{
     const [subscription, setSubscription] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("ultra");
     const [isCheckingProPlan, setIsCheckingProPlan] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const chatResetRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
+    const user = {
+        id: "default-user"
+    };
     // Rate limit warning dismissal state (persists across chat switches)
     const [hasUserDismissedRateLimitWarning, setHasUserDismissedRateLimitWarning] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     // Message queue state (for Agent mode queueing)
@@ -938,7 +937,6 @@ const GlobalStateProvider = ({ children })=>{
             setSubscription("ultra");
         }
     }["GlobalStateProvider.useEffect"], [
-        user,
         entitlements
     ]);
     // const ensureAggregatesMigrated = useMutation(
@@ -949,13 +947,13 @@ const GlobalStateProvider = ({ children })=>{
     const previousUserIdRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "GlobalStateProvider.useEffect": ()=>{
-            const currentUserId = user?.id ?? null;
+            const currentUserId = user.id;
             // Reset migration flag if user changed (logout/login as different user)
             if (previousUserIdRef.current !== currentUserId) {
                 hasMigrationRun.current = false;
                 previousUserIdRef.current = currentUserId;
             }
-            if (!user || hasMigrationRun.current) return;
+            if (hasMigrationRun.current) return;
             hasMigrationRun.current = true;
             ensureAggregatesMigrated().catch({
                 "GlobalStateProvider.useEffect": (error)=>{
@@ -964,7 +962,6 @@ const GlobalStateProvider = ({ children })=>{
             }["GlobalStateProvider.useEffect"]);
         }
     }["GlobalStateProvider.useEffect"], [
-        user,
         ensureAggregatesMigrated
     ]);
     // Refresh entitlements only when explicitly requested via URL param
@@ -972,8 +969,6 @@ const GlobalStateProvider = ({ children })=>{
         "GlobalStateProvider.useEffect": ()=>{
             const refreshFromUrl = {
                 "GlobalStateProvider.useEffect.refreshFromUrl": async ()=>{
-                    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-                    ;
                     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
                     ;
                     const url = new URL(window.location.href);
@@ -995,13 +990,6 @@ const GlobalStateProvider = ({ children })=>{
                             const tier = data.subscription;
                             setSubscription(tier === "ultra" || tier === "team" || tier === "pro" ? tier : "free");
                         } else {
-                            if (response.status === 401) {
-                                if ("TURBOPACK compile-time truthy", 1) {
-                                    const { clientLogout } = await __turbopack_context__.A("[project]/lib/utils/logout.ts [app-client] (ecmascript, async loader)");
-                                    clientLogout();
-                                    return;
-                                }
-                            }
                             setSubscription("free");
                         }
                     } catch  {
@@ -1399,7 +1387,7 @@ const GlobalStateProvider = ({ children })=>{
         children: children
     }, void 0, false, {
         fileName: "[project]/app/contexts/GlobalState.tsx",
-        lineNumber: 741,
+        lineNumber: 728,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

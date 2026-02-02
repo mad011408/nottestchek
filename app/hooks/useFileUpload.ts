@@ -1,8 +1,5 @@
 import { useRef, useState, useCallback } from "react";
 import { toast } from "sonner";
-import { useMutation, useAction } from "convex/react";
-import { ConvexError } from "convex/values";
-import { api } from "@/convex/_generated/api";
 import {
   MAX_FILES_LIMIT,
   uploadSingleFileToConvex,
@@ -12,7 +9,8 @@ import {
 import { MAX_TOKENS_FILE } from "@/lib/token-utils";
 import { FileProcessingResult, FileSource } from "@/types/file";
 import { useGlobalState } from "../contexts/GlobalState";
-import { Id } from "@/convex/_generated/dataModel";
+
+type Id<T extends string> = string;
 
 const USE_S3_STORAGE = process.env.NEXT_PUBLIC_USE_S3_STORAGE === "true";
 
@@ -191,12 +189,8 @@ export const useFileUpload = (mode: "ask" | "agent" = "ask") => {
       } catch (error) {
         console.error("Failed to upload file:", error);
 
-        // Extract error message from ConvexError or regular Error
+        // Extract error message from regular Error
         const errorMessage = (() => {
-          if (error instanceof ConvexError) {
-            const errorData = error.data as { message?: string };
-            return errorData?.message || error.message || "Upload failed";
-          }
           if (error instanceof Error) {
             return error.message;
           }

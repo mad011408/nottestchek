@@ -1,6 +1,4 @@
 import { RefObject, useEffect, useRef } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
 import { useGlobalState } from "../contexts/GlobalState";
 import type { ChatMessage, ChatStatus } from "@/types";
 import { Id } from "@/convex/_generated/dataModel";
@@ -13,6 +11,8 @@ import { toast } from "sonner";
 import { removeTodosBySourceMessages } from "@/lib/utils/todo-utils";
 import { useDataStream } from "@/app/components/DataStreamProvider";
 import { normalizeMessages } from "@/lib/utils/message-processor";
+
+type Id<T extends string> = string;
 
 interface UseChatHandlersProps {
   chatId: string;

@@ -2,12 +2,10 @@
 
 import React from "react";
 import { ChevronRight } from "lucide-react";
-import { useQuery, useMutation } from "convex/react";
-import { ConvexError } from "convex/values";
-import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
+import { useGlobalState } from "../contexts/GlobalState";
 
 interface PersonalizationTabProps {
   onCustomInstructions: () => void;
@@ -82,13 +80,9 @@ const PersonalizationTab = ({
                 } catch (error) {
                   console.error("Failed to save customization:", error);
                   const errorMessage =
-                    error instanceof ConvexError
-                      ? (error.data as { message?: string })?.message ||
-                        error.message ||
-                        "Failed to save customization"
-                      : error instanceof Error
-                        ? error.message
-                        : "Failed to save customization";
+                    error instanceof Error
+                      ? error.message
+                      : "Failed to save customization";
                   toast.error(errorMessage);
                 }
               }}

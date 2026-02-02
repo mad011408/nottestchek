@@ -19,6 +19,10 @@ import { ChatSDKError } from "@/lib/errors";
 import PostHogClient from "@/app/posthog";
 import { geolocation } from "@vercel/functions";
 import { NextRequest } from "next/server";
+
+type Doc<T extends string> = any;
+type Id<T extends string> = string;
+
 import {
   handleInitialChatAndUserMessage,
   saveMessage,

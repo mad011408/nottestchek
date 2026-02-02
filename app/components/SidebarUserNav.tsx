@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAuth } from "@workos-inc/authkit-nextjs/components";
 import {
   LogOut,
   Sparkle,
@@ -33,7 +32,8 @@ import {
 } from "@/components/ui/tooltip";
 import { CustomizeHackerAIDialog } from "./CustomizeHackerAIDialog";
 import { SettingsDialog } from "./SettingsDialog";
-import { clientLogout } from "@/lib/utils/logout";
+
+const clientLogout = () => {};
 
 const NEXT_PUBLIC_HELP_CENTER_URL =
   process.env.NEXT_PUBLIC_HELP_CENTER_URL || "https://help.hackerai.co/en/";
@@ -89,19 +89,24 @@ const UpgradeBanner = ({ isCollapsed }: { isCollapsed: boolean }) => {
 };
 
 const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
+  const {
+    subscription,
+    selectedModel,
+    setSelectedModel,
+    customSystemPrompt,
+    setCustomSystemPrompt,
+  } = useGlobalState();
+
   const user = { id: "default-user", email: "user@example.com", firstName: "Default", lastName: "User" };
-  const { isCheckingProPlan, subscription } = useGlobalState();
   const [showCustomizeDialog, setShowCustomizeDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const isMobile = useIsMobile();
-
-  if (!user) return null;
 
   // Determine if user has pro subscription
   const isProUser = subscription !== "free";
 
   const handleLogOut = async () => {
-    clientLogout();
+    // Disabled
   };
 
   const handleHelpCenter = () => {
