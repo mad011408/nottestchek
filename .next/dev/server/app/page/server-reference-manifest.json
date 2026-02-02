@@ -1,6 +1,6 @@
 {
   "node": {
-    "7f58dc3616934193b027ff7054961801fe5621a38d": {
+    "7f629bb2a21ab728e3830541740e13914e4bbdd541": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -15,7 +15,7 @@
       "exportedName": "checkSessionAction",
       "filename": "node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js"
     },
-    "7feb201a762d04be64b413d9d49b68fa0a235d5d51": {
+    "7fcaa83d21d9ebe7c903d9bb6b09c123f7c800f84c": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -30,7 +30,7 @@
       "exportedName": "getAuthAction",
       "filename": "node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js"
     },
-    "7f74ed6c0bd42f73dc4c3ac5b17b4a4e01ac59d73f": {
+    "7f2f2add19b8b1899b05d50bb4852f32ba5fad654d": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -45,7 +45,7 @@
       "exportedName": "handleSignOutAction",
       "filename": "node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js"
     },
-    "7f3a1458f5082dee15be3be6eeb97d151afec5a62d": {
+    "7f0cc18ba8116ff3cc390f60ac1079c331f6816dbc": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -60,7 +60,7 @@
       "exportedName": "refreshAuthAction",
       "filename": "node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js"
     },
-    "7f8edd5bfeae84c656a7810c297c00fecf5e6b0695": {
+    "7f823f3843c00e06ec52cdd2c637c3c45073b965eb": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",
@@ -75,7 +75,7 @@
       "exportedName": "switchToOrganizationAction",
       "filename": "node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js"
     },
-    "00bef52c133f2dbb3a84a9d24412eb32701240c317": {
+    "00ed56dd1cc59e44c90d13b4b2127b08615794daa2": {
       "workers": {
         "app/page": {
           "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/node_modules/.pnpm/@workos-inc+authkit-nextjs@2.12.0_next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1._d69fb94637ccf89267342f537ef484a4/node_modules/@workos-inc/authkit-nextjs/dist/esm/actions.js [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/lib/actions/billing-portal.ts [app-rsc] (ecmascript)\" } [app-rsc] (server actions loader, ecmascript)",

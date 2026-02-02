@@ -2,25 +2,12 @@
 
 import React from "react";
 import { HackerAISVG } from "@/components/icons/hackerai-svg";
-import { Button } from "@/components/ui/button";
-import { useAuth } from "@workos-inc/authkit-nextjs/components";
 
 interface HeaderProps {
   chatTitle?: string;
 }
 
 const Header: React.FC<HeaderProps> = ({ chatTitle }) => {
-  const user = { id: "default-user" };
-  const loading = false;
-
-  const handleSignIn = () => {
-    window.location.href = "/login";
-  };
-
-  const handleSignUp = () => {
-    window.location.href = "/signup";
-  };
-
   return (
     <header className="w-full px-6 max-sm:px-4 flex-shrink-0">
       {/* Desktop header */}
@@ -39,29 +26,6 @@ const Header: React.FC<HeaderProps> = ({ chatTitle }) => {
               </span>
             </div>
           )}
-          {!chatTitle && <div className="flex gap-[40px]"></div>}
-          {!loading && !user && (
-            <div className="flex gap-2 items-center">
-              <Button
-                data-testid="sign-in-button"
-                onClick={handleSignIn}
-                variant="default"
-                size="default"
-                className="min-w-[74px] rounded-[10px]"
-              >
-                Sign in
-              </Button>
-              <Button
-                data-testid="sign-up-button"
-                onClick={handleSignUp}
-                variant="outline"
-                size="default"
-                className="min-w-16 rounded-[10px]"
-              >
-                Sign up
-              </Button>
-            </div>
-          )}
         </div>
       </div>
 
@@ -73,28 +37,6 @@ const Header: React.FC<HeaderProps> = ({ chatTitle }) => {
             HackerAI
           </span>
         </div>
-        {!loading && !user && (
-          <div className="flex items-center gap-2">
-            <Button
-              data-testid="sign-in-button-mobile"
-              onClick={handleSignIn}
-              variant="default"
-              size="sm"
-              className="rounded-[10px]"
-            >
-              Sign in
-            </Button>
-            <Button
-              data-testid="sign-up-button-mobile"
-              onClick={handleSignUp}
-              variant="outline"
-              size="sm"
-              className="rounded-[10px]"
-            >
-              Sign up
-            </Button>
-          </div>
-        )}
       </div>
     </header>
   );

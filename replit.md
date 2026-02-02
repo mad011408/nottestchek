@@ -24,10 +24,9 @@ Preferred communication style: Simple, everyday language.
 - **Sandbox Execution**: E2B cloud sandboxes for agent mode code execution, with optional local sandbox fallback
 
 ### Authentication & Authorization
-- **Provider**: WorkOS AuthKit for user management and SSO
-- **Session Handling**: JWT-based authentication with Convex custom JWT provider
-- **Subscription Tiers**: Free, Pro, Ultra, and Team tiers with feature gating
-- **Rate Limiting**: Upstash Redis for per-user, per-tier rate limiting
+- **Provider**: None (Removed WorkOS/AuthKit)
+- **Session Handling**: None (Hardcoded Default User)
+- **Subscription Tiers**: None (Hardcoded Ultra Tier)
 
 ### Data Storage
 - **Primary Database**: Convex (NoSQL document database with real-time sync)

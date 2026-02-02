@@ -29,7 +29,7 @@ import { useLatestRef } from "../hooks/useLatestRef";
 import { useDataStream } from "./DataStreamProvider";
 import { removeDraft } from "@/lib/utils/client-storage";
 
-export const Chat = ({
+const Chat = ({
   chatId: routeChatId,
   autoResume,
 }: {
@@ -570,4 +570,4 @@ export const Chat = ({
       </div>
     </div>
   );
-};
+};export default Chat;
