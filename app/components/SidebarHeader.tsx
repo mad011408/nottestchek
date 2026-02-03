@@ -14,7 +14,6 @@ import { HackerAISVG } from "@/components/icons/hackerai-svg";
 import { useGlobalState } from "../contexts/GlobalState";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useChats } from "../hooks/useChats";
-import { MessageSearchDialog } from "./MessageSearchDialog";
 
 interface SidebarHeaderContentProps {
   /** Function to handle closing the sidebar */
@@ -57,10 +56,10 @@ const SidebarHeaderContentImpl: FC<SidebarHeaderContentImplProps> = ({
   useChats(isSearchOpen);
 
   // Detect if user is on Mac
-  const isMac = useMemo(
-    () => /macintosh|mac os x/i.test(navigator.userAgent),
-    [],
-  );
+  const [isMac, setIsMac] = useState(false);
+  useEffect(() => {
+    setIsMac(/macintosh|mac os x/i.test(navigator.userAgent));
+  }, []);
 
   // Platform-specific modifier key
   const modifierKey = isMac ? "⌘" : "Ctrl+";
@@ -166,12 +165,6 @@ const SidebarHeaderContentImpl: FC<SidebarHeaderContentImplProps> = ({
             </div>
           </div>
         </div>
-
-        {/* Search Dialog */}
-        <MessageSearchDialog
-          isOpen={isSearchOpen}
-          onClose={handleSearchClose}
-        />
       </>
     );
   }
@@ -234,9 +227,6 @@ const SidebarHeaderContentImpl: FC<SidebarHeaderContentImplProps> = ({
           </Button>
         </div>
       </div>
-
-      {/* Search Dialog */}
-      <MessageSearchDialog isOpen={isSearchOpen} onClose={handleSearchClose} />
     </>
   );
 };

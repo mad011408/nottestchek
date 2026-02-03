@@ -46,46 +46,7 @@ const XIcon = ({ className, ...props }: React.SVGProps<SVGSVGElement>) => (
 
 // Upgrade banner component
 const UpgradeBanner = ({ isCollapsed }: { isCollapsed: boolean }) => {
-  const { isCheckingProPlan, subscription } = useGlobalState();
-  const isProUser = subscription !== "free";
-
-  // Don't show for pro users or while checking
-  if (isCheckingProPlan || isProUser) {
-    return null;
-  }
-
-  const handleUpgrade = () => {
-    redirectToPricing();
-  };
-
-  return (
-    <div className="relative">
-      {!isCollapsed && (
-        <div className="relative rounded-t-2xl bg-premium-bg backdrop-blur-sm transition-all duration-200">
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={handleUpgrade}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                handleUpgrade();
-              }
-            }}
-            className="group relative z-10 flex w-full items-center rounded-t-2xl py-2.5 px-4 text-xs border border-sidebar-border hover:bg-premium-hover transition-all duration-150 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:outline-none cursor-pointer"
-            aria-label="Upgrade your plan"
-          >
-            <span className="flex items-center gap-2.5">
-              <Sparkle className="h-4 w-4 text-premium-text fill-current" />
-              <span className="text-xs font-medium text-premium-text">
-                Upgrade your plan
-              </span>
-            </span>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+  return null;
 };
 
 const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
@@ -95,9 +56,8 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
     setSelectedModel,
     customSystemPrompt,
     setCustomSystemPrompt,
+    user,
   } = useGlobalState();
-
-  const user = { id: "default-user", email: "user@example.com", firstName: "Default", lastName: "User" };
   const [showCustomizeDialog, setShowCustomizeDialog] = useState(false);
   const [showSettingsDialog, setShowSettingsDialog] = useState(false);
   const isMobile = useIsMobile();
@@ -143,8 +103,8 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
   };
 
   const getUserInitials = () => {
-    const firstName = user.firstName?.charAt(0)?.toUpperCase() || "";
-    const lastName = user.lastName?.charAt(0)?.toUpperCase() || "";
+    const firstName = (user as any).firstName?.charAt(0)?.toUpperCase() || "";
+    const lastName = (user as any).lastName?.charAt(0)?.toUpperCase() || "";
     if (firstName && lastName) {
       return firstName + lastName;
     }
@@ -158,10 +118,10 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
   };
 
   const getDisplayName = () => {
-    if (user.firstName && user.lastName) {
-      return `${user.firstName} ${user.lastName}`;
+    if ((user as any).firstName && (user as any).lastName) {
+      return `${(user as any).firstName} ${(user as any).lastName}`;
     }
-    return user.firstName || user.lastName || "User";
+    return (user as any).firstName || (user as any).lastName || "User";
   };
 
   return (
@@ -170,7 +130,7 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
       <UpgradeBanner isCollapsed={isCollapsed} />
 
       {/* Upgrade button for collapsed state */}
-      {isCollapsed && !isCheckingProPlan && !isProUser && (
+      {isCollapsed && false && (
         <div className="mb-1">
           <TooltipProvider>
             <Tooltip>
@@ -207,7 +167,7 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
               >
                 <Avatar data-testid="user-avatar" className="h-7 w-7">
                   <AvatarImage
-                    src={user.profilePictureUrl || undefined}
+                    src={(user as any).profilePictureUrl || undefined}
                     alt={getDisplayName()}
                   />
                   <AvatarFallback className="text-xs">
@@ -227,7 +187,7 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
             >
               <Avatar data-testid="user-avatar" className="h-7 w-7">
                 <AvatarImage
-                  src={user.profilePictureUrl || undefined}
+                  src={(user as any).profilePictureUrl || undefined}
                   alt={getDisplayName()}
                 />
                 <AvatarFallback className="text-xs">
@@ -275,7 +235,7 @@ const SidebarUserNav = ({ isCollapsed = false }: { isCollapsed?: boolean }) => {
 
           <DropdownMenuSeparator />
 
-          {subscription === "pro" && (
+          {false && (
             <DropdownMenuItem
               data-testid="upgrade-menu-item"
               onClick={redirectToPricing}

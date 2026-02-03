@@ -9,7 +9,6 @@ import { ChatInput } from "./ChatInput";
 import { ComputerSidebar } from "./ComputerSidebar";
 import ChatHeader from "./ChatHeader";
 import MainSidebar from "./Sidebar";
-import Footer from "./Footer";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useMessageScroll } from "../hooks/useMessageScroll";
 import { useChatHandlers } from "../hooks/useChatHandlers";
@@ -492,7 +491,7 @@ const Chat = ({
             <ChatHeader
               hasMessages={hasMessages}
               hasActiveChat={isExistingChat}
-              chatTitle={chatTitle}
+              chatTitle={chatTitle || undefined}
               id={routeChatId}
               chatData={chatData}
               chatSidebarOpen={chatSidebarOpen}
@@ -506,15 +505,15 @@ const Chat = ({
             <div
               ref={scrollRef}
               className="flex-1 overflow-y-auto overflow-x-hidden min-h-0 relative scroll-smooth selection:bg-primary/20"
-              onDragEnter={handleDragEnter}
-              onDragOver={handleDragOver}
-              onDrop={handleDrop}
+              onDragEnter={handleDragEnter as any}
+              onDragOver={handleDragOver as any}
+              onDrop={handleDrop as any}
             >
               <div ref={contentRef} className="max-w-4xl mx-auto px-4 py-8">
                 <Messages
                   messages={messages}
                   status={status}
-                  error={error}
+                  error={(error as any) || null}
                   onRetry={handleRetry}
                   onRegenerate={handleRegenerate}
                   onEditMessage={handleEditMessage}
@@ -552,11 +551,10 @@ const Chat = ({
                   onStop={handleStop}
                   onSendNow={handleSendNow}
                   status={status}
-                  rateLimitWarning={rateLimitWarning}
+                  rateLimitWarning={(rateLimitWarning as any) || undefined}
                   onDismissRateLimitWarning={handleDismissRateLimitWarning}
                   chatId={chatId}
                 />
-                <Footer />
               </div>
             </div>
           </div>

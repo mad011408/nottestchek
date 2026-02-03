@@ -40,6 +40,7 @@ interface GlobalStateType {
   // Input state
   input: string;
   setInput: (value: string) => void;
+  user: { id: string; email: string };
 
   // File upload state
   uploadedFiles: UploadedFileState[];
@@ -169,7 +170,6 @@ interface GlobalStateProviderProps {
 export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   children,
 }) => {
-  const entitlements = ["ultra-plan"];
   const isMobile = useIsMobile();
   const prevIsMobile = useRef(isMobile);
   const [input, setInput] = useState("");
@@ -186,19 +186,55 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     null,
   );
 
-  // Persist chat mode preference to localStorage on change
-  useEffect(() => {
-    writeChatMode(chatMode);
-  }, [chatMode]);
-  // Initialize chat sidebar state
   const [chatSidebarOpen, setChatSidebarOpen] = useState(() =>
     chatSidebarStorage.get(isMobile),
   );
   const [todos, setTodos] = useState<Todo[]>([]);
   const [isTodoPanelExpanded, setIsTodoPanelExpanded] = useState(false);
+  const [chats, setChats] = useState<any[]>([]);
+  const [subscription] = useState<SubscriptionTier>("ultra");
+  const [isCheckingProPlan] = useState(false);
+  const chatResetRef = useRef<(() => void) | null>(null);
+
+  const user = { 
+    id: "default-user", 
+    email: "user@example.com",
+    firstName: "Default",
+    lastName: "User",
+    profilePictureUrl: null
+  };
+
+  const [
+    hasUserDismissedRateLimitWarning,
+    setHasUserDismissedRateLimitWarning,
+  ] = useState(false);
+
+  const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
+
+  const [queueBehavior, setQueueBehaviorState] = useState<QueueBehavior>(() => {
+    if (typeof window === "undefined") return "queue";
+    const saved = localStorage.getItem("queue-behavior");
+    return (saved === "queue" || saved === "stop-and-send") ? saved : "queue";
+  });
+
+  const [sandboxPreference, setSandboxPreferenceState] =
+    useState<SandboxPreference>(() => {
+      if (typeof window === "undefined") return "e2b";
+      return (localStorage.getItem("sandbox-preference") as SandboxPreference) || "e2b";
+    });
+
+  const [temporaryChatsEnabled, setTemporaryChatsEnabledState] = useState(false);
+  const [teamPricingDialogOpen, setTeamPricingDialogOpen] = useState(false);
+  const [teamWelcomeDialogOpen, setTeamWelcomeDialogOpenState] = useState(false);
+  const [migrateFromPentestgptDialogOpen, setMigrateFromPentestgptDialogOpenState] = useState(false);
+
+  const [selectedModel, setSelectedModel] = useState("gpt-5.2-pro-2025-12-11");
+  const [customSystemPrompt, setCustomSystemPrompt] = useState("");
+
   const mergeTodos = useCallback((newTodos: Todo[]) => {
     setTodos((currentTodos) => mergeTodosUtil(currentTodos, newTodos));
   }, []);
+
   const replaceAssistantTodos = useCallback(
     (incoming: Todo[], sourceMessageId?: string) => {
       setTodos((current) =>
@@ -207,272 +243,13 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     },
     [],
   );
-  const [chats, setChats] = useState<any[]>([]);
-  const [subscription, setSubscription] = useState<SubscriptionTier>("ultra");
-  const [isCheckingProPlan, setIsCheckingProPlan] = useState(false);
-  const chatResetRef = useRef<(() => void) | null>(null);
 
-  const user = { id: "default-user" };
-
-  // Rate limit warning dismissal state (persists across chat switches)
-  const [
-    hasUserDismissedRateLimitWarning,
-    setHasUserDismissedRateLimitWarning,
-  ] = useState(false);
-
-  // Message queue state (for Agent mode queueing)
-  const [messageQueue, setMessageQueue] = useState<QueuedMessage[]>([]);
-
-  // Queue behavior preference (persisted to localStorage)
-  const [queueBehavior, setQueueBehaviorState] = useState<QueueBehavior>(() => {
-    if (typeof window === "undefined") return "queue";
-    const saved = localStorage.getItem("queue-behavior");
-    if (saved === "queue" || saved === "stop-and-send") {
-      return saved;
-    }
-    return "queue"; // Default: queue after current message completes
-  });
-
-  // Sandbox preference (persisted to localStorage)
-  const [sandboxPreference, setSandboxPreferenceState] =
-    useState<SandboxPreference>(() => {
-      if (typeof window === "undefined") return "e2b";
-      return localStorage.getItem("sandbox-preference") || "e2b";
-    });
-
-  // Persist queue behavior to localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("queue-behavior", queueBehavior);
-    }
-  }, [queueBehavior]);
-
-  // Persist sandbox preference to localStorage
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("sandbox-preference", sandboxPreference);
-    }
-  }, [sandboxPreference]);
-
-  // Initialize temporary chats from URL parameter
-  const [temporaryChatsEnabled, setTemporaryChatsEnabled] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("temporary-chat") === "true";
-  });
-  // Initialize team pricing dialog from URL hash
-  const [teamPricingDialogOpen, setTeamPricingDialogOpen] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.location.hash === "#team-pricing-seat-selection";
-  });
-
-  // Initialize team welcome dialog from URL parameter
-  const [teamWelcomeDialogOpen, setTeamWelcomeDialogOpen] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get("team-welcome") === "true";
-  });
-
-  // Initialize PentestGPT migration confirm dialog from URL parameter
-  const [migrateFromPentestgptDialogOpen, setMigrateFromPentestgptDialogOpen] =
-    useState(() => {
-      if (typeof window === "undefined") return false;
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get("confirm-migrate-pentestgpt") === "true";
-    });
-
-  useEffect(() => {
-    // Save state on desktop
-    chatSidebarStorage.save(chatSidebarOpen, isMobile);
-
-    // Close sidebar when transitioning from desktop to mobile
-    if (!prevIsMobile.current && isMobile && chatSidebarOpen) {
-      setChatSidebarOpen(false);
-    }
-
-    prevIsMobile.current = isMobile;
-  }, [chatSidebarOpen, isMobile]);
-
-  // Cleanup expired drafts on app initialization (once per session)
-  useEffect(() => {
-    cleanupExpiredDrafts();
-  }, []); // Empty dependency array = runs once on mount
-
-  // Derive subscription tier from current token entitlements
-  // Prefer normalized entitlements ("pro-plan", "ultra-plan"); fall back to monthly/yearly keys for backward compatibility
-  useEffect(() => {
-    setSubscription("ultra");
-  }, [entitlements]);
-
-  // const ensureAggregatesMigrated = useMutation(
-  //   api.aggregateMigrations.ensureUserAggregatesMigrated,
-  // );
-  const ensureAggregatesMigrated = async () => {};
-  const hasMigrationRun = useRef(false);
-  const previousUserIdRef = useRef<string | null>(null);
-
-  useEffect(() => {
-    const currentUserId = user.id;
-
-    // Reset migration flag if user changed (logout/login as different user)
-    if (previousUserIdRef.current !== currentUserId) {
-      hasMigrationRun.current = false;
-      previousUserIdRef.current = currentUserId;
-    }
-
-    if (hasMigrationRun.current) return;
-
-    hasMigrationRun.current = true;
-    ensureAggregatesMigrated().catch((error) => {
-      console.error("Failed to migrate user aggregates:", error);
-    });
-  }, [ensureAggregatesMigrated]);
-
-  // Refresh entitlements only when explicitly requested via URL param
-  useEffect(() => {
-    const refreshFromUrl = async () => {
-      if (typeof window === "undefined") return;
-
-      const url = new URL(window.location.href);
-      const shouldRefresh = url.searchParams.get("refresh") === "entitlements";
-      if (!shouldRefresh) return;
-
-      setIsCheckingProPlan(true);
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000);
-
-        const response = await fetch("/api/entitlements", {
-          credentials: "include",
-          signal: controller.signal,
-        });
-
-        clearTimeout(timeoutId);
-
-        if (response.ok) {
-          const data = await response.json();
-          const tier = data.subscription as SubscriptionTier | undefined;
-          setSubscription(
-            tier === "ultra" || tier === "team" || tier === "pro"
-              ? tier
-              : "free",
-          );
-        } else {
-          setSubscription("free");
-        }
-      } catch {
-        setSubscription("free");
-      } finally {
-        setIsCheckingProPlan(false);
-        // Remove the refresh param to avoid repeated refreshes
-        url.searchParams.delete("refresh");
-        window.history.replaceState({}, "", url.toString());
-      }
-    };
-
-    refreshFromUrl();
-  }, [user]);
-
-  // Listen for URL changes to sync temporary chat state
-  useEffect(() => {
-    const handleUrlChange = () => {
-      if (typeof window === "undefined") return;
-      const urlParams = new URLSearchParams(window.location.search);
-      const urlTemporaryEnabled = urlParams.get("temporary-chat") === "true";
-
-      // Only update state if it differs from URL to avoid infinite loops
-      if (temporaryChatsEnabled !== urlTemporaryEnabled) {
-        setTemporaryChatsEnabled(urlTemporaryEnabled);
-      }
-    };
-
-    // Listen for popstate events (browser back/forward)
-    window.addEventListener("popstate", handleUrlChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleUrlChange);
-    };
-  }, [temporaryChatsEnabled]);
-
-  // Listen for hash changes to sync team pricing dialog state
-  useEffect(() => {
-    const handleHashChange = () => {
-      if (typeof window === "undefined") return;
-      const shouldOpen =
-        window.location.hash === "#team-pricing-seat-selection";
-
-      // Only update state if it differs to avoid infinite loops
-      if (teamPricingDialogOpen !== shouldOpen) {
-        setTeamPricingDialogOpen(shouldOpen);
-      }
-    };
-
-    // Listen for hash changes
-    window.addEventListener("hashchange", handleHashChange);
-    window.addEventListener("popstate", handleHashChange);
-
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-      window.removeEventListener("popstate", handleHashChange);
-    };
-  }, [teamPricingDialogOpen]);
-
-  // Listen for URL changes to sync team welcome dialog state
-  useEffect(() => {
-    const handleUrlChange = () => {
-      if (typeof window === "undefined") return;
-      const urlParams = new URLSearchParams(window.location.search);
-      const shouldOpen = urlParams.get("team-welcome") === "true";
-
-      // Only update state if it differs to avoid infinite loops
-      if (teamWelcomeDialogOpen !== shouldOpen) {
-        setTeamWelcomeDialogOpen(shouldOpen);
-      }
-    };
-
-    // Listen for popstate events (browser back/forward)
-    window.addEventListener("popstate", handleUrlChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleUrlChange);
-    };
-  }, [teamWelcomeDialogOpen]);
-
-  // Listen for URL changes to sync PentestGPT migration confirm dialog state
-  useEffect(() => {
-    const handleUrlChange = () => {
-      if (typeof window === "undefined") return;
-      const urlParams = new URLSearchParams(window.location.search);
-      const shouldOpen = urlParams.get("confirm-migrate-pentestgpt") === "true";
-
-      if (migrateFromPentestgptDialogOpen !== shouldOpen) {
-        setMigrateFromPentestgptDialogOpen(shouldOpen);
-      }
-    };
-
-    window.addEventListener("popstate", handleUrlChange);
-
-    return () => {
-      window.removeEventListener("popstate", handleUrlChange);
-    };
-  }, [migrateFromPentestgptDialogOpen]);
-
-  const clearInput = () => {
-    setInput("");
-  };
-
-  const clearUploadedFiles = () => {
-    setUploadedFiles([]);
-  };
-
-  // Calculate total tokens from all files that have tokens
   const getTotalTokens = useCallback((): number => {
     return uploadedFiles.reduce((total, file) => {
       return file.tokens ? total + file.tokens : total;
     }, 0);
   }, [uploadedFiles]);
 
-  // Check if any files are currently uploading or have errors
   const isUploadingFiles = uploadedFiles.some(
     (file) => file.uploading || file.error,
   );
@@ -494,26 +271,20 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     [],
   );
 
-  // Message queue handlers
   const queueMessage = useCallback(
     (
       text: string,
-      files?: Array<{ file: File; fileId: Id<"files">; url: string }>,
+      files?: Array<{ file: File; fileId: string; url: string }>,
     ) => {
       setMessageQueue((prev) => {
-        // Limit queue size to 10 messages
         if (prev.length >= 10) {
-          toast.error("Queue is full", {
-            description:
-              "Please wait for queued messages to send before adding more.",
-          });
+          toast.error("Queue is full");
           return prev;
         }
-
         const newMessage: QueuedMessage = {
-          id: uuidv4(),
+          id: uuidv4() as any,
           text,
-          files,
+          files: files as any,
           timestamp: Date.now(),
         };
         return [...prev, newMessage];
@@ -526,9 +297,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     setMessageQueue((prev) => prev.filter((msg) => msg.id !== id));
   }, []);
 
-  const clearQueue = useCallback(() => {
-    setMessageQueue([]);
-  }, []);
+  const clearQueue = useCallback(() => setMessageQueue([]), []);
 
   const dequeueNext = useCallback((): QueuedMessage | null => {
     let nextMessage: QueuedMessage | null = null;
@@ -540,20 +309,15 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     return nextMessage;
   }, []);
 
-  const initializeChat = useCallback((chatId: string, _fromRoute?: boolean) => {
+  const initializeChat = useCallback((chatId: string) => {
     setIsSwitchingChats(true);
     setCurrentChatId(chatId);
-    // Don't clear input here - let ChatInput restore draft automatically
-    // setInput("");  // Removed - ChatInput will handle draft restoration
     setTodos([]);
     setIsTodoPanelExpanded(false);
   }, []);
 
   const initializeNewChat = useCallback(() => {
-    // Allow chat component to reset its local state immediately
-    if (chatResetRef.current) {
-      chatResetRef.current();
-    }
+    if (chatResetRef.current) chatResetRef.current();
     setCurrentChatId(null);
     setTodos([]);
     setIsTodoPanelExpanded(false);
@@ -574,12 +338,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   };
 
   const updateSidebarContent = (updates: Partial<SidebarContent>) => {
-    setSidebarContent((current) => {
-      if (current) {
-        return { ...current, ...updates };
-      }
-      return current;
-    });
+    setSidebarContent((current) => current ? { ...current, ...updates } : current);
   };
 
   const closeSidebar = () => {
@@ -587,141 +346,38 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
     setSidebarContent(null);
   };
 
-  const toggleChatSidebar = () => {
-    setChatSidebarOpen((prev: boolean) => !prev);
-  };
-
-  // Custom setter for temporary chats that also updates URL
-  const setTemporaryChatsEnabledWithUrl = useCallback((enabled: boolean) => {
-    setTemporaryChatsEnabled(enabled);
-
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      if (enabled) {
-        url.searchParams.set("temporary-chat", "true");
-      } else {
-        url.searchParams.delete("temporary-chat");
-      }
-      window.history.replaceState({}, "", url.toString());
-    }
-  }, []);
-
-  // Custom setter for team welcome dialog that also updates URL
-  const setTeamWelcomeDialogOpenWithUrl = useCallback((open: boolean) => {
-    setTeamWelcomeDialogOpen(open);
-
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      if (!open) {
-        // Remove the param when dialog is closed
-        url.searchParams.delete("team-welcome");
-        window.history.replaceState({}, "", url.toString());
-      }
-    }
-  }, []);
-
-  // Custom setter for PentestGPT migration confirm dialog that also updates URL
-  const setMigrateFromPentestgptDialogOpenWithUrl = useCallback(
-    (open: boolean) => {
-      setMigrateFromPentestgptDialogOpen(open);
-
-      if (typeof window !== "undefined") {
-        const url = new URL(window.location.href);
-        if (open) {
-          url.searchParams.set("confirm-migrate-pentestgpt", "true");
-        } else {
-          url.searchParams.delete("confirm-migrate-pentestgpt");
-        }
-        window.history.replaceState({}, "", url.toString());
-      }
-    },
-    [],
-  );
-
-  const [selectedModel, setSelectedModel] = useState("gpt-5.2-pro-2025-12-11");
-  const [customSystemPrompt, setCustomSystemPrompt] = useState("");
+  const toggleChatSidebar = () => setChatSidebarOpen((prev: boolean) => !prev);
 
   const value: GlobalStateType = {
-    input,
-    setInput,
-    uploadedFiles,
-    setUploadedFiles,
-    addUploadedFile,
-    removeUploadedFile,
-    updateUploadedFile,
-    getTotalTokens,
-    isUploadingFiles,
-    chatMode,
-    setChatMode,
-    chatTitle,
-    setChatTitle,
-    currentChatId,
-    setCurrentChatId,
-    chats,
-    setChats,
-    isSwitchingChats,
-    setIsSwitchingChats,
-    sidebarOpen,
-    setSidebarOpen,
-    sidebarContent,
-    setSidebarContent,
-    chatSidebarOpen,
-    setChatSidebarOpen,
-    todos,
-    setTodos,
-    mergeTodos,
-    replaceAssistantTodos,
-
-    isTodoPanelExpanded,
-    setIsTodoPanelExpanded,
-
-    subscription,
-    isCheckingProPlan,
-
-    clearInput,
-    clearUploadedFiles,
-    openSidebar,
-    updateSidebarContent,
-    closeSidebar,
-    toggleChatSidebar,
-    initializeChat,
-    initializeNewChat,
-    activateChat,
-
-    temporaryChatsEnabled,
-    setTemporaryChatsEnabled: setTemporaryChatsEnabledWithUrl,
-
-    teamPricingDialogOpen,
-    setTeamPricingDialogOpen,
-
-    teamWelcomeDialogOpen,
-    setTeamWelcomeDialogOpen: setTeamWelcomeDialogOpenWithUrl,
-
-    migrateFromPentestgptDialogOpen,
-    setMigrateFromPentestgptDialogOpen:
-      setMigrateFromPentestgptDialogOpenWithUrl,
-
+    input, setInput,
+    uploadedFiles, setUploadedFiles, addUploadedFile, removeUploadedFile, updateUploadedFile,
+    getTotalTokens, isUploadingFiles,
+    chatMode, setChatMode,
+    chatTitle, setChatTitle,
+    currentChatId, setCurrentChatId,
+    chats, setChats,
+    isSwitchingChats, setIsSwitchingChats,
+    sidebarOpen, setSidebarOpen, sidebarContent, setSidebarContent,
+    chatSidebarOpen, setChatSidebarOpen,
+    todos, setTodos, mergeTodos, replaceAssistantTodos,
+    isTodoPanelExpanded, setIsTodoPanelExpanded,
+    subscription, isCheckingProPlan,
+    hasUserDismissedRateLimitWarning, setHasUserDismissedRateLimitWarning,
+    messageQueue, queueMessage, removeQueuedMessage, clearQueue, dequeueNext,
+    queueBehavior, setQueueBehavior: setQueueBehaviorState,
+    sandboxPreference, setSandboxPreference: setSandboxPreferenceState,
+    clearInput: () => setInput(""),
+    clearUploadedFiles: () => setUploadedFiles([]),
+    openSidebar, updateSidebarContent, closeSidebar, toggleChatSidebar,
+    initializeChat, initializeNewChat, activateChat,
+    temporaryChatsEnabled, setTemporaryChatsEnabled: setTemporaryChatsEnabledState,
+    teamPricingDialogOpen, setTeamPricingDialogOpen,
+    teamWelcomeDialogOpen, setTeamWelcomeDialogOpen: setTeamWelcomeDialogOpenState,
+    migrateFromPentestgptDialogOpen, setMigrateFromPentestgptDialogOpen: setMigrateFromPentestgptDialogOpenState,
     setChatReset,
-
-    hasUserDismissedRateLimitWarning,
-    setHasUserDismissedRateLimitWarning,
-
-    messageQueue,
-    queueMessage,
-    removeQueuedMessage,
-    clearQueue,
-    dequeueNext,
-
-    queueBehavior,
-    setQueueBehavior: setQueueBehaviorState,
-
-    sandboxPreference,
-    setSandboxPreference: setSandboxPreferenceState,
-
-    selectedModel,
-    setSelectedModel,
-    customSystemPrompt,
-    setCustomSystemPrompt,
+    selectedModel, setSelectedModel,
+    customSystemPrompt, setCustomSystemPrompt,
+    user,
   };
 
   return (
@@ -731,7 +387,7 @@ export const GlobalStateProvider: React.FC<GlobalStateProviderProps> = ({
   );
 };
 
-export const useGlobalState = (): GlobalStateType => {
+export const useGlobalState = () => {
   const context = useContext(GlobalStateContext);
   if (context === undefined) {
     throw new Error("useGlobalState must be used within a GlobalStateProvider");
