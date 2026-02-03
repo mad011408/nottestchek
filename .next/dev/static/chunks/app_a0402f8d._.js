@@ -203,19 +203,12 @@ __turbopack_context__.s([
     ()=>useFileUrlCache
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/next@16.0.10_@babel+core@7.28.5_@opentelemetry+api@1.9.0_@playwright+test@1.57.0_react-_bc0e796ca3d7ea4640f9d74c95225eb3/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$convex$40$1$2e$29$2e$2_react$40$19$2e$2$2e$1$2f$node_modules$2f$convex$2f$dist$2f$esm$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/convex@1.29.2_react@19.2.1/node_modules/convex/dist/esm/react/index.js [app-client] (ecmascript) <locals>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$convex$40$1$2e$29$2e$2_react$40$19$2e$2$2e$1$2f$node_modules$2f$convex$2f$dist$2f$esm$2f$react$2f$client$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/.pnpm/convex@1.29.2_react@19.2.1/node_modules/convex/dist/esm/react/client.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$convex$2f$_generated$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/convex/_generated/api.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2f$file$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/lib/utils/file-utils.ts [app-client] (ecmascript)");
 var _s = __turbopack_context__.k.signature();
-;
-;
-;
 ;
 const URL_CACHE_EXPIRATION = 50 * 60 * 1000; // 50 minutes (S3 URLs expire in 1 hour)
 function useFileUrlCache(messages) {
     _s();
-    const getFileUrlsBatchAction = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$convex$40$1$2e$29$2e$2_react$40$19$2e$2$2e$1$2f$node_modules$2f$convex$2f$dist$2f$esm$2f$react$2f$client$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAction"])(__TURBOPACK__imported__module__$5b$project$5d2f$convex$2f$_generated$2f$api$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["api"].s3Actions.getFileUrlsBatchAction);
+    const getFileUrlsBatchAction = null;
     const urlCacheRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(new Map());
     const prefetchedIdsRef = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(new Set());
     // Get cached URL for a file (returns null if expired or not cached)
@@ -248,70 +241,12 @@ function useFileUrlCache(messages) {
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "useFileUrlCache.useEffect": ()=>{
             async function prefetchImageUrls() {
-                // Track seen fileIds within this run to avoid duplicates
-                const seenInThisRun = new Set();
-                const s3ImageFiles = [];
-                for (const message of messages){
-                    if (!message.fileDetails) continue;
-                    for (const file of message.fileDetails){
-                        // Only process files that:
-                        // 1. Have an S3 key (not Convex storage)
-                        // 2. Are supported image types
-                        // 3. Haven't been prefetched yet
-                        // 4. Haven't been seen in this run
-                        if (file.s3Key && file.mediaType && (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2f$file$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isSupportedImageMediaType"])(file.mediaType) && !prefetchedIdsRef.current.has(file.fileId) && !seenInThisRun.has(file.fileId)) {
-                            s3ImageFiles.push({
-                                fileId: file.fileId,
-                                mediaType: file.mediaType
-                            });
-                            seenInThisRun.add(file.fileId);
-                        }
-                    }
-                }
-                // Also collect image files from message parts
-                for (const message of messages){
-                    for (const part of message.parts){
-                        if (part.type === "file" && "fileId" in part && "s3Key" in part && part.s3Key && part.mediaType && (0, __TURBOPACK__imported__module__$5b$project$5d2f$lib$2f$utils$2f$file$2d$utils$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["isSupportedImageMediaType"])(part.mediaType) && typeof part.fileId === "string" && !prefetchedIdsRef.current.has(part.fileId) && !seenInThisRun.has(part.fileId)) {
-                            s3ImageFiles.push({
-                                fileId: part.fileId,
-                                mediaType: part.mediaType
-                            });
-                            seenInThisRun.add(part.fileId);
-                        }
-                    }
-                }
-                // If no new images to prefetch, return early
-                if (s3ImageFiles.length === 0) {
-                    return;
-                }
-                // Batch fetch URLs with deduplicated fileIds
-                try {
-                    const fileIds = s3ImageFiles.map({
-                        "useFileUrlCache.useEffect.prefetchImageUrls.fileIds": (f)=>f.fileId
-                    }["useFileUrlCache.useEffect.prefetchImageUrls.fileIds"]);
-                    const urlMap = await getFileUrlsBatchAction({
-                        fileIds
-                    });
-                    // Cache the fetched URLs (only if urlMap is valid)
-                    if (urlMap && typeof urlMap === "object") {
-                        const now = Date.now();
-                        for (const [fileId, url] of Object.entries(urlMap)){
-                            urlCacheRef.current.set(fileId, {
-                                url,
-                                timestamp: now
-                            });
-                            prefetchedIdsRef.current.add(fileId);
-                        }
-                    }
-                } catch (error) {
-                    console.error("Failed to prefetch image URLs:", error);
-                }
+                return; // Convex disabled
             }
             prefetchImageUrls();
         }
     }["useFileUrlCache.useEffect"], [
-        messages,
-        getFileUrlsBatchAction
+        messages
     ]);
     // Cleanup expired URLs periodically
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$next$40$16$2e$0$2e$10_$40$babel$2b$core$40$7$2e$28$2e$5_$40$opentelemetry$2b$api$40$1$2e$9$2e$0_$40$playwright$2b$test$40$1$2e$57$2e$0_react$2d$_bc0e796ca3d7ea4640f9d74c95225eb3$2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -341,11 +276,7 @@ function useFileUrlCache(messages) {
         setCachedUrl
     };
 }
-_s(useFileUrlCache, "yXgMilCp+Ify/l63dyhuqo49X5o=", false, function() {
-    return [
-        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f2e$pnpm$2f$convex$40$1$2e$29$2e$2_react$40$19$2e$2$2e$1$2f$node_modules$2f$convex$2f$dist$2f$esm$2f$react$2f$client$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useAction"]
-    ];
-});
+_s(useFileUrlCache, "xdKSP8/o5PWc5EjNjP/JGPziJXo=");
 if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelpers !== null) {
     __turbopack_context__.k.registerExports(__turbopack_context__.m, globalThis.$RefreshHelpers$);
 }

@@ -88,42 +88,42 @@ export const Messages = ({
   // Prefetch and cache image URLs for better performance
   const { getCachedUrl, setCachedUrl } = useFileUrlCache(messages);
 
-  // Memoize expensive calculations
-  const lastAssistantMessageIndex = useMemo(() => {
-    return findLastAssistantMessageIndex(messages);
-  }, [messages]);
-
-  // Compute the branch boundary: last message that originated from another chat
-  const branchBoundaryIndex = useMemo(() => {
-    for (let i = messages.length - 1; i >= 0; i--) {
-      if (messages[i].sourceMessageId) return i;
-    }
-    return -1;
-  }, [messages]);
-
-  // Track hover state for all messages
-  const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
-
-  // Track edit state for messages
-  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
-
-  // Track all files dialog state
-  const [showAllFilesDialog, setShowAllFilesDialog] = useState(false);
-  const [dialogFiles, setDialogFiles] = useState<
-    Array<{
-      part: any;
-      partIndex: number;
-      messageId: string;
-    }>
-  >([]);
-
-  // Handle feedback logic
-  const {
-    feedbackInputMessageId,
-    handleFeedback,
-    handleFeedbackSubmit,
-    handleFeedbackCancel,
-  } = useFeedback({ messages, setMessages });
+    // Memoize expensive calculations
+    const lastAssistantMessageIndex = useMemo(() => {
+      return findLastAssistantMessageIndex(messages);
+    }, [messages]);
+  
+    // Compute the branch boundary: last message that originated from another chat
+    const branchBoundaryIndex = useMemo(() => {
+      for (let i = messages.length - 1; i >= 0; i--) {
+        if ((messages[i] as any).sourceMessageId) return i;
+      }
+      return -1;
+    }, [messages]);
+  
+    // Track hover state for all messages
+    const [hoveredMessageId, setHoveredMessageId] = useState<string | null>(null);
+  
+    // Track edit state for messages
+    const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  
+    // Track all files dialog state
+    const [showAllFilesDialog, setShowAllFilesDialog] = useState(false);
+    const [dialogFiles, setDialogFiles] = useState<
+      Array<{
+        part: any;
+        partIndex: number;
+        messageId: string;
+      }>
+    >([]);
+  
+    // Handle feedback logic
+    const {
+      feedbackInputMessageId,
+      handleFeedback,
+      handleFeedbackSubmit,
+      handleFeedbackCancel,
+    } = useFeedback({ messages: messages as any, setMessages: setMessages as any });
 
   // Sidebar auto-open removed - sidebar only opens via manual clicks
 

@@ -519,6 +519,9 @@ const Chat = ({
                   onEditMessage={handleEditMessage}
                   onBranchMessage={handleBranchMessage}
                   tempChatFileDetails={tempChatFileDetails}
+                  setMessages={setMessages as any}
+                  scrollRef={scrollRef as any}
+                  contentRef={contentRef as any}
                 />
               </div>
 
