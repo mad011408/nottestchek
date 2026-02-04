@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <p align="center">
   <a href="https://hackerai.co/">
     <img src="public/icon-512x512.png" width="150" alt="HackerAI Logo">
@@ -79,3 +80,7 @@ Or run them separately in two terminals:
 pnpm run dev:next
 pnpm run dev:convex
 ```
+=======
+# nottestchek
+dont use ........
+>>>>>>> 750075b42d2dc6a031319862efbff1019044988b
