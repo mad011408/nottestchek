@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { workos } from "../../workos";
-import { stripe } from "../../stripe";
+import { getWorkOS } from "../../workos";
+import { getStripe } from "../../stripe";
 import { getUserIDAndPro } from "@/lib/auth/get-user-id";
 
 export const GET = async (req: NextRequest) => {
   try {
+    const workos = getWorkOS();
+    const stripe = getStripe();
     const { userId, subscription } = await getUserIDAndPro(req);
 
     // Only allow team subscription users to access this endpoint

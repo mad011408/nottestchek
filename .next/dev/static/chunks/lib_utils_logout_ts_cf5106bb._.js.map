@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///home/runner/workspace/lib/utils/logout.ts"],"sourcesContent":["\"use client\";\n\nimport { clearAllDrafts } from \"@/lib/utils/client-storage\";\n\nexport const clientLogout = (redirectPath: string = \"/logout\"): void => {\n  if (typeof window === \"undefined\") return;\n  try {\n    clearAllDrafts();\n  } catch {\n    // ignore\n  } finally {\n    try {\n      window.location.href = redirectPath;\n    } catch {\n      // ignore\n    }\n  }\n};\n"],"names":[],"mappings":";;;;AAEA;AAFA;;AAIO,MAAM,eAAe,CAAC,eAAuB,SAAS;IAC3D;;IACA,IAAI;QACF,IAAA,sJAAc;IAChB,EAAE,OAAM;IACN,SAAS;IACX,SAAU;QACR,IAAI;YACF,OAAO,QAAQ,CAAC,IAAI,GAAG;QACzB,EAAE,OAAM;QACN,SAAS;QACX;IACF;AACF"}}]
-}

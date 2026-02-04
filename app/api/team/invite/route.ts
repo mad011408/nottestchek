@@ -1,10 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { workos } from "../../workos";
+import { getWorkOS } from "../../workos";
 import { getUserIDAndPro } from "@/lib/auth/get-user-id";
-import { stripe } from "../../stripe";
+import { getStripe } from "../../stripe";
 
 export const POST = async (req: NextRequest) => {
   try {
+    const workos = getWorkOS();
+    const stripe = getStripe();
     const { userId, subscription } = await getUserIDAndPro(req);
 
     // Only allow team subscription users to access this endpoint
@@ -144,6 +146,7 @@ export const POST = async (req: NextRequest) => {
 
 export const DELETE = async (req: NextRequest) => {
   try {
+    const workos = getWorkOS();
     const { userId, subscription } = await getUserIDAndPro(req);
 
     // Only allow team subscription users to access this endpoint

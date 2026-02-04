@@ -1,10 +1,12 @@
-import { stripe } from "../stripe";
-import { workos } from "../workos";
+import { getStripe } from "../stripe";
+import { getWorkOS } from "../workos";
 import { getUserID } from "@/lib/auth/get-user-id";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   try {
+    const workos = getWorkOS();
+    const stripe = getStripe();
     const body = await req.json().catch(() => ({}));
     const targetPlan: string | undefined = body?.plan;
     const confirm: boolean = body?.confirm === true;

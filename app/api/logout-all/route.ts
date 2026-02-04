@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { workos } from "@/app/api/workos";
+import { getWorkOS } from "@/app/api/workos";
 import { getUserID } from "@/lib/auth/get-user-id";
 
 export async function POST(req: NextRequest) {
   try {
+    const workos = getWorkOS();
     // Get the current user ID
     const userId = await getUserID(req);
 

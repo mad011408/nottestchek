@@ -1,6 +1,35 @@
 node_modules
+
+# Next.js
+.next
+out
+
+# Vite / builds
 dist
+
+# Env files
+.env
+.env.*.local
+.env.local
+
+# Local caches
+.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS / tooling
 .DS_Store
+*.tar.gz
+*.tsbuildinfo
+
+# Misc generated artifacts
+typecheck_current.txt
+typecheck_diagnostics.txt
+
 server/public
 vite.config.ts.*
-*.tar.gz
+.next/
