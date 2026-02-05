@@ -120,10 +120,10 @@ export const createChatHandler = () => {
 
       const { userId, subscription } = { userId: "default-user", subscription: "ultra" };
       const userLocation = geolocation(req);
-      const dbConfigured = Boolean(
-        process.env.NEXT_PUBLIC_CONVEX_URL && process.env.CONVEX_SERVICE_ROLE_KEY,
+      let dbEnabled = Boolean(
+        convex && process.env.NEXT_PUBLIC_CONVEX_URL && process.env.CONVEX_SERVICE_ROLE_KEY,
       );
-      const isTemporary = Boolean(temporary) || !dbConfigured;
+      let isTemporary = Boolean(temporary) || !dbEnabled;
 
       if (mode === "agent" && subscription === "free") {
         throw new ChatSDKError(
@@ -140,8 +140,12 @@ export const createChatHandler = () => {
         abortController: userStopSignal,
       });
 
-      const { truncatedMessages, chat, isNewChat } = dbConfigured
-        ? await getMessagesByChatId({
+      let truncatedMessages: UIMessage[] = messages;
+      let chat: any | null = null;
+      let isNewChat = true;
+      if (dbEnabled && !isTemporary) {
+        try {
+          const result = await getMessagesByChatId({
             chatId,
             userId,
             subscription,
@@ -149,8 +153,18 @@ export const createChatHandler = () => {
             regenerate,
             isTemporary,
             mode,
-          })
-        : { truncatedMessages: messages, chat: null, isNewChat: true };
+          });
+          truncatedMessages = result.truncatedMessages;
+          chat = result.chat ?? null;
+          isNewChat = result.isNewChat;
+        } catch {
+          dbEnabled = false;
+          isTemporary = true;
+          truncatedMessages = messages;
+          chat = null;
+          isNewChat = true;
+        }
+      }
 
       const baseTodos: Todo[] = getBaseTodosForRequest(
         (chat?.todos as unknown as Todo[]) || [],
@@ -158,7 +172,7 @@ export const createChatHandler = () => {
         { isTemporary, regenerate },
       );
 
-      if (!isTemporary && dbConfigured) {
+      if (!isTemporary && dbEnabled) {
         await handleInitialChatAndUserMessage({
           chatId,
           userId,
@@ -183,15 +197,13 @@ export const createChatHandler = () => {
 
       const selectedModel = clientModel || autoSelectedModel;
 
-      const userCustomization = dbConfigured
-        ? await getUserCustomization({ userId })
-        : null;
+      const userCustomization = dbEnabled ? await getUserCustomization({ userId }) : null;
       const memoryEnabled = userCustomization?.include_memory_entries ?? true;
       const posthog = PostHogClient();
       const assistantMessageId = uuidv4();
 
       // Start temp stream coordination for temporary chats
-      if (isTemporary && dbConfigured) {
+      if (isTemporary && dbEnabled) {
         try {
           await startTempStream({ chatId, userId });
         } catch {
@@ -201,7 +213,7 @@ export const createChatHandler = () => {
 
       // Start cancellation poller (works for both regular and temporary chats)
       let pollerStopped = false;
-      const cancellationPoller = dbConfigured
+      const cancellationPoller = dbEnabled
         ? createCancellationPoller({
             chatId,
             isTemporary,
@@ -252,7 +264,7 @@ export const createChatHandler = () => {
             assistantMessageId,
             subscription,
             sandboxPreference,
-            dbConfigured ? process.env.CONVEX_SERVICE_ROLE_KEY : undefined,
+            dbEnabled ? process.env.CONVEX_SERVICE_ROLE_KEY : undefined,
           );
 
           // Get sandbox context for system prompt (only for local sandboxes)
@@ -467,12 +479,7 @@ export const createChatHandler = () => {
                   // For temporary chats, send file metadata via stream before cleanup
                   const newFileIds = getFileAccumulator().getAll();
 
-                  if (
-                    dbConfigured &&
-                    convex &&
-                    newFileIds &&
-                    newFileIds.length > 0
-                  ) {
+                  if (dbEnabled && convex && newFileIds && newFileIds.length > 0) {
                     try {
                       // Fetch file metadata in batch
                       const fileMetadata = await convex.query(
@@ -506,7 +513,7 @@ export const createChatHandler = () => {
                   }
 
                   // Ensure temp stream row is removed backend-side
-                  if (dbConfigured) {
+                  if (dbEnabled) {
                     await deleteTempStreamForBackend({ chatId });
                   }
                 }
@@ -521,7 +528,7 @@ export const createChatHandler = () => {
       const sse = stream.pipeThrough(new JsonToSseTransformStream());
 
       // Create a resumable stream and persist the active stream id (non-temporary chats)
-      if (!isTemporary && dbConfigured) {
+      if (!isTemporary && dbEnabled) {
         const streamContext = getStreamContext();
         if (streamContext) {
           const streamId = uuidv4();
