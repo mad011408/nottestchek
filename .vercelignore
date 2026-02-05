@@ -1,0 +1,11 @@
+node_modules
+.next
+.vercel
+.local
+attached_assets
+build
+dist
+.git
+.trae
+*.log
+*.zip
