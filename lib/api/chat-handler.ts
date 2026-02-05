@@ -302,6 +302,50 @@ export const createChatHandler = () => {
                 )
               : Promise.resolve(undefined);
 
+          const isPlaceholderKey = (value: string) =>
+            value === "your-nvidia-api-key" ||
+            value === "your-bytez-api-key" ||
+            value === "your-openai-api-key" ||
+            value === "your-trybons-api-key" ||
+            /^your[-_]/i.test(value);
+
+          const rawProviderApiKey =
+            process.env.TRYBONS_API_KEY || process.env.OPENAI_API_KEY || "";
+          const providerApiKey = isPlaceholderKey(rawProviderApiKey)
+            ? ""
+            : rawProviderApiKey;
+
+          const writeImmediateAssistantMessage = (text: string) => {
+            writer.write({ type: "start", messageId: assistantMessageId });
+            writer.write({ type: "text-start", id: "text" });
+            writer.write({ type: "text-delta", id: "text", delta: text });
+            writer.write({ type: "text-end", id: "text" });
+            writer.write({ type: "finish", finishReason: "error" });
+          };
+
+          if (!providerApiKey) {
+            writeImmediateAssistantMessage(
+              "AI backend configure nahi hai. Vercel env me TRYBONS_API_KEY (recommended) ya OPENAI_API_KEY set karo.",
+            );
+            return;
+          }
+
+          const hasAnyUserText = processedMessages.some((m: any) => {
+            if (m.role !== "user") return false;
+            const parts = Array.isArray(m.parts) ? m.parts : [];
+            return parts.some(
+              (p: any) =>
+                p?.type === "text" && typeof p.text === "string" && p.text.trim(),
+            );
+          });
+
+          if (!hasAnyUserText) {
+            writeImmediateAssistantMessage(
+              "Kuch bhi message nahi mila. Please phir se 'hello' send karo.",
+            );
+            return;
+          }
+
           const trackedProvider = createTrackedProvider(
             userId,
             chatId,
@@ -325,10 +369,14 @@ export const createChatHandler = () => {
           let finalMessages = processedMessages;
           let hasSummarized = false;
 
+          const modelMessages = await convertToModelMessages(finalMessages);
+
+          let wroteProviderError = false;
+
           const result = streamText({
             model: trackedProvider.languageModel(selectedModel),
             system: currentSystemPrompt,
-            messages: convertToModelMessages(finalMessages),
+            messages: modelMessages,
             tools,
             maxTokens: 120000,
             abortSignal: userStopSignal.signal,
@@ -384,6 +432,14 @@ export const createChatHandler = () => {
             },
             onError: async (error) => {
               console.error("Error:", error);
+              if (!wroteProviderError) {
+                wroteProviderError = true;
+                const message =
+                  error instanceof Error ? error.message : String(error);
+                writeImmediateAssistantMessage(
+                  `AI provider error. Please thodi der baad retry karo. (${message.slice(0, 160)})`,
+                );
+              }
             },
           });
 
