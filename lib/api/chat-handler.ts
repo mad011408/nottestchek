@@ -112,8 +112,6 @@ export const createChatHandler = () => {
         customSystemPrompt?: string;
       } = await req.json();
 
-      const selectedModel = clientModel || "gpt-5.2-pro-2025-12-11";
-
       const { userId, subscription } = { userId: "default-user", subscription: "ultra" };
       const userLocation = geolocation(req);
 
@@ -160,12 +158,18 @@ export const createChatHandler = () => {
 
       const rateLimitInfo = await checkRateLimit(userId, mode, subscription);
 
-      const { processedMessages, selectedModel, sandboxFiles } =
+      const {
+        processedMessages,
+        selectedModel: autoSelectedModel,
+        sandboxFiles,
+      } =
         await processChatMessages({
           messages: truncatedMessages,
           mode,
           subscription,
         });
+
+      const selectedModel = clientModel || autoSelectedModel;
 
       const userCustomization = await getUserCustomization({ userId });
       const memoryEnabled = userCustomization?.include_memory_entries ?? true;
@@ -290,26 +294,17 @@ export const createChatHandler = () => {
           let hasSummarized = false;
 
           const result = streamText({
-        model: trackedProvider.languageModel(selectedModel),
-        system: currentSystemPrompt,
-        messages: convertToModelMessages(finalMessages),
-        tools,
-        maxTokens: 120000,
-        headers: {
-          "Authorization": `Bearer sk_cr_5TfD2yaX7Do6sa4qt5NnWwH4YfpeT4nUmAE9PEeUrsPS`
-        },
-        abortSignal: userStopSignal.signal,
-        providerOptions: {
-          openai: {
-            // Force baseURL if not picked up from provider
-          }
-        },
-        experimental_transform: smoothStream({ chunking: "word" }),
-        // Fast response settings
-        temperature: 0.7,
-        topP: 1,
-        frequencyPenalty: 0,
-        presencePenalty: 0,
+            model: trackedProvider.languageModel(selectedModel),
+            system: currentSystemPrompt,
+            messages: convertToModelMessages(finalMessages),
+            tools,
+            maxTokens: 120000,
+            abortSignal: userStopSignal.signal,
+            experimental_transform: smoothStream({ chunking: "word" }),
+            temperature: 0.7,
+            topP: 1,
+            frequencyPenalty: 0,
+            presencePenalty: 0,
             stopWhen: stepCountIs(getMaxStepsForUser(mode, subscription)),
             onChunk: async (chunk) => {
               // Track all tool calls immediately (no throttle)

@@ -110,8 +110,14 @@ export const ChatInput = ({
     { value: "gemini-3-pro-preview", label: "Gemini 3 Pro" },
     { value: "gpt-5.2-pro-2025-12-11", label: "GPT-5.2 Pro" },
     { value: "o3-pro-2025-06-10", label: "o3 Pro" },
-    { value: "minimax-m2.1", label: "Minimax m2.1" },
-    { value: "moonshotai/kimi-k2.5", label: "Kimi k2.5" },
+    { value: "openai/gpt-5", label: "BYTEZ: GPT-5" },
+    { value: "openai/gpt-5.1", label: "BYTEZ: GPT-5.1" },
+    { value: "openai/gpt-4.1", label: "BYTEZ: GPT-4.1" },
+    { value: "openai/gpt-4o", label: "BYTEZ: GPT-4o" },
+    { value: "minimax-m2.1", label: "NVIDIA: Minimax m2.1" },
+    { value: "moonshotai/kimi-k2.5", label: "NVIDIA: Kimi k2.5" },
+    { value: "stepfun-ai/step-3.5-flash", label: "NVIDIA: Step 3.5 Flash" },
+    { value: "z-ai/glm4.7", label: "NVIDIA: GLM 4.7" },
   ];
   const {
     fileInputRef,

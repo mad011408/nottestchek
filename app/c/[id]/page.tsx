@@ -1,6 +1,6 @@
 "use client";
 
-import { Chat } from "../../components/chat";
+import Chat from "../../components/chat";
 import Loading from "@/components/ui/loading";
 import PricingDialog from "../../components/PricingDialog";
 import { usePricingDialog } from "../../hooks/usePricingDialog";
