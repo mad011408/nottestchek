@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import { getMaxTokensForSubscription } from "@/lib/token-utils";
 import { countTokens } from "gpt-tokenizer";
 import { SubscriptionTier } from "@/types";
+import { sanitizeUIMessagesForModel } from "@/lib/utils/message-sanitize";
 
 // Keep last N messages unsummarized for context
 const MESSAGES_TO_KEEP_UNSUMMARIZED = 2;
@@ -139,7 +140,9 @@ export const checkAndSummarizeIfNeeded = async (
         "- Compress repetitive or similar findings into consolidated form\n\n" +
         "Remember: Another security agent will use this summary to continue the assessment. They must be able to pick up exactly where you left off without losing any operational advantage or context needed to find vulnerabilities.",
       messages: [
-        ...convertToModelMessages(messagesToSummarize),
+        ...(await convertToModelMessages(
+          sanitizeUIMessagesForModel(messagesToSummarize),
+        )),
         {
           role: "user",
           content:

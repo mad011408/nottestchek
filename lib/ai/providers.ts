@@ -1,45 +1,163 @@
-import { openai } from "@ai-sdk/openai";
+import { createOpenAI } from "@ai-sdk/openai";
 import { customProvider } from "ai";
 
+const sanitizeEnvValue = (value?: string): string =>
+  (value ?? "").trim().replace(/`/g, "");
+
 const ensureV1BaseUrl = (hostOrBaseUrl: string): string => {
-  const normalized = hostOrBaseUrl.replace(/\/$/, "");
+  const normalized = sanitizeEnvValue(hostOrBaseUrl).replace(/\/$/, "");
   if (normalized.endsWith("/v1")) return normalized;
   return `${normalized}/v1`;
 };
 
-const apiKey = process.env.TRYBONS_API_KEY || process.env.OPENAI_API_KEY || "";
-const baseUrl = ensureV1BaseUrl(
-  process.env.TRYBONS_API_HOST ||
-    process.env.OPENAI_BASE_URL ||
-    "https://go.trybons.ai/v1",
-);
+const isPlaceholderKey = (value: string) =>
+  value === "your-nvidia-api-key" ||
+  value === "your-bytez-api-key" ||
+  value === "your-openai-api-key" ||
+  value === "your-trybons-api-key" ||
+  /^your[-_]/i.test(value);
 
-const customOpenAI = (modelName: string) => openai(modelName, {
+const createChatModel = ({
+  modelId,
+  baseURL,
   apiKey,
-  baseURL: baseUrl,
-});
+  extraHeaders,
+}: {
+  modelId: string;
+  baseURL: string;
+  apiKey: string;
+  extraHeaders?: Record<string, string>;
+}) => {
+  const cleanKey = isPlaceholderKey(apiKey) ? "" : sanitizeEnvValue(apiKey);
+  const provider = createOpenAI({
+    apiKey: cleanKey,
+    baseURL: ensureV1BaseUrl(baseURL),
+    headers: extraHeaders,
+  });
+  return provider.chat(modelId);
+};
+
+const getBonsaiConfig = () => {
+  const apiKey = sanitizeEnvValue(
+    process.env.TRYBONS_API_KEY || process.env.OPENAI_API_KEY || "",
+  );
+  const baseURL = sanitizeEnvValue(
+    process.env.TRYBONS_API_HOST ||
+      process.env.OPENAI_BASE_URL ||
+      "https://go.trybons.ai/v1",
+  );
+  return { apiKey, baseURL };
+};
+
+const getBytezConfig = () => {
+  const apiKey = sanitizeEnvValue(process.env.BYTEZ_API_KEY || "");
+  const baseURL = sanitizeEnvValue(
+    process.env.BYTEZ_API_HOST || process.env.BYTEZ_BASE_URL || "",
+  );
+  return { apiKey, baseURL };
+};
+
+const getNvidiaConfig = () => {
+  const apiKey = sanitizeEnvValue(process.env.NVIDIA_API_KEY || "");
+  const baseURL = sanitizeEnvValue(process.env.NVIDIA_API_HOST || "");
+  return { apiKey, baseURL };
+};
+
+const nvidiaModelId = (modelName: string) =>
+  modelName === "minimax-m2.1" ? "minimaxai/minimax-m2.1" : modelName;
 
 const baseProviders = {
-  "ask-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "ask-model-free": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "ask-vision-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "ask-vision-model-for-pdfs": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "agent-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "agent-vision-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "title-generator-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "summarization-model": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "claude-opus-4-5-20251101": customOpenAI("claude-opus-4-5-20251101"),
-  "gemini-3-pro-preview": customOpenAI("gemini-3-pro-preview"),
-  "gpt-5.2-pro-2025-12-11": customOpenAI("gpt-5.2-pro-2025-12-11"),
-  "o3-pro-2025-06-10": customOpenAI("o3-pro-2025-06-10"),
-  "minimax-m2.1": customOpenAI("minimax-m2.1"),
-  "moonshotai/kimi-k2.5": customOpenAI("moonshotai/kimi-k2.5"),
-  "stepfun-ai/step-3.5-flash": customOpenAI("stepfun-ai/step-3.5-flash"),
-  "z-ai/glm4.7": customOpenAI("z-ai/glm4.7"),
-  "openai/gpt-4.1": customOpenAI("openai/gpt-4.1"),
-  "openai/gpt-4o": customOpenAI("openai/gpt-4o"),
-  "openai/gpt-5.1": customOpenAI("openai/gpt-5.1"),
-  "openai/gpt-5": customOpenAI("openai/gpt-5"),
+  "ask-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "ask-model-free": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "ask-vision-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "ask-vision-model-for-pdfs": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "agent-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "agent-vision-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "title-generator-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "summarization-model": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+
+  "claude-opus-4-5-20251101": createChatModel({
+    modelId: "claude-opus-4-5-20251101",
+    ...getBonsaiConfig(),
+  }),
+  "gemini-3-pro-preview": createChatModel({
+    modelId: "gemini-3-pro-preview",
+    ...getBonsaiConfig(),
+  }),
+  "gpt-5.2-pro-2025-12-11": createChatModel({
+    modelId: "gpt-5.2-pro-2025-12-11",
+    ...getBonsaiConfig(),
+  }),
+  "o3-pro-2025-06-10": createChatModel({
+    modelId: "o3-pro-2025-06-10",
+    ...getBonsaiConfig(),
+  }),
+
+  "minimax-m2.1": createChatModel({
+    modelId: nvidiaModelId("minimax-m2.1"),
+    ...getNvidiaConfig(),
+    extraHeaders: { "x-api-key": getNvidiaConfig().apiKey },
+  }),
+  "moonshotai/kimi-k2.5": createChatModel({
+    modelId: nvidiaModelId("moonshotai/kimi-k2.5"),
+    ...getNvidiaConfig(),
+    extraHeaders: { "x-api-key": getNvidiaConfig().apiKey },
+  }),
+  "stepfun-ai/step-3.5-flash": createChatModel({
+    modelId: nvidiaModelId("stepfun-ai/step-3.5-flash"),
+    ...getNvidiaConfig(),
+    extraHeaders: { "x-api-key": getNvidiaConfig().apiKey },
+  }),
+  "z-ai/glm4.7": createChatModel({
+    modelId: nvidiaModelId("z-ai/glm4.7"),
+    ...getNvidiaConfig(),
+    extraHeaders: { "x-api-key": getNvidiaConfig().apiKey },
+  }),
+
+  "openai/gpt-4.1": createChatModel({
+    modelId: "openai/gpt-4.1",
+    ...getBytezConfig(),
+    extraHeaders: { "x-api-key": getBytezConfig().apiKey },
+  }),
+  "openai/gpt-4o": createChatModel({
+    modelId: "openai/gpt-4o",
+    ...getBytezConfig(),
+    extraHeaders: { "x-api-key": getBytezConfig().apiKey },
+  }),
+  "openai/gpt-5.1": createChatModel({
+    modelId: "openai/gpt-5.1",
+    ...getBytezConfig(),
+    extraHeaders: { "x-api-key": getBytezConfig().apiKey },
+  }),
+  "openai/gpt-5": createChatModel({
+    modelId: "openai/gpt-5",
+    ...getBytezConfig(),
+    extraHeaders: { "x-api-key": getBytezConfig().apiKey },
+  }),
 };
 
 export type ModelName = keyof typeof baseProviders;

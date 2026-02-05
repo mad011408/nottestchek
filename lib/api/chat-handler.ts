@@ -43,6 +43,7 @@ import { v4 as uuidv4 } from "uuid";
 import { processChatMessages } from "@/lib/chat/chat-processor";
 import { createTrackedProvider } from "@/lib/ai/providers";
 import { uploadSandboxFiles } from "@/lib/utils/sandbox-file-utils";
+import { sanitizeUIMessagesForModel } from "@/lib/utils/message-sanitize";
 import { after } from "next/server";
 import { createResumableStreamContext } from "resumable-stream";
 import { checkAndSummarizeIfNeeded } from "@/lib/utils/message-summarization";
@@ -369,7 +370,9 @@ export const createChatHandler = () => {
           let finalMessages = processedMessages;
           let hasSummarized = false;
 
-          const modelMessages = await convertToModelMessages(finalMessages);
+          const modelMessages = await convertToModelMessages(
+            sanitizeUIMessagesForModel(finalMessages),
+          );
 
           let wroteProviderError = false;
 
