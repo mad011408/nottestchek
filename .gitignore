@@ -33,3 +33,6 @@ typecheck_diagnostics.txt
 server/public
 vite.config.ts.*
 .next/
+
+.vercel
+.env*.local
